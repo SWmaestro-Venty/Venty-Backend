@@ -41,6 +41,6 @@ jobs:
         password : ${{ secrets.DOCKERHUB_TOKEN }}
     
     - name : Docker Hub Push
-    - run : docker push Venty-Backend
+      run : docker push Venty-Backend
     
     
