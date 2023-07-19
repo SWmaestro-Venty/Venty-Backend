@@ -17,6 +17,6 @@ public class VentyBackendApplication {
 
 	@GetMapping
 	public String helloWorld() {
-		return "Hello World This is CI/CD Test Sentence!";
+		return "Hello World This is CI/CD Test Sentence Twice!";
 	}
 }
