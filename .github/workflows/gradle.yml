@@ -49,4 +49,16 @@ jobs:
     - name: Docker Hub Push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/venty-docker
     
-
+    - name: AWS EC2 Connection
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        password: ${{ secrets.EC2_PASSWORD }}
+        port: ${{ secrets.EC2_SSH_PORT }}
+        timeout: 60s
+        script: |
+          sudo docker stop venty-docker
+          sudo docker rm venty-docker
+          sudo docker run -it -d -p 8080:8080 --name venty-docker shmom467/venty-docker
+          
