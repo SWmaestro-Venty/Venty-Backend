@@ -53,7 +53,7 @@ jobs:
       uses: appleboy/ssh-action@v0.1.6
       with:
         host: ${{ secrets.EC2_HOST }}
-        username: venty
+        username: ec2-user
         password: ${{ secrets.EC2_KEY }}
         port: ${{ secrets.EC2_SSH_PORT }}
         timeout: 60s
