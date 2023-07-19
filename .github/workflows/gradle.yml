@@ -50,7 +50,7 @@ jobs:
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/venty-docker
     
     - name: AWS EC2 Connection
-      uses: appleboy/ssh-action@v0.1.6
+      uses: appleboy/ssh-action@v0.1.4
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ec2-user
