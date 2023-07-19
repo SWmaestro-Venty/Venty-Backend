@@ -31,6 +31,8 @@ jobs:
       with:
         arguments: build
 
+    - run: echo ${{ github.workspace }}
+
     - name: Docker Image Build
       run: docker build -t venty-backend .
       
@@ -43,4 +45,4 @@ jobs:
     - name: Docker Hub Push
       run: docker push Venty-Backend
     
-    
+
