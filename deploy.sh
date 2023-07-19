@@ -1,4 +1,4 @@
-REPOSITORY=/home/ubuntu/app
+REPOSITORY=/home/ec2-user
 cd $REPOSITORY
 
 APP_NAME=Venty-Backend
