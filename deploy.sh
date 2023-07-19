@@ -1,4 +1,4 @@
-REPOSITORY=app
+REPOSITORY=/home/ec2-user/app
 cd $REPOSITORY
 
 APP_NAME=app
