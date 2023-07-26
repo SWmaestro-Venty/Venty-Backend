@@ -37,5 +37,8 @@ out/
 .vscode/
 
 ### AWS ###
-resource/application-aws.properties
-application-aws.properties
+*.properties
+src/main/resources/application.properties
+src/main/resources/application-aws.properties
+
+
