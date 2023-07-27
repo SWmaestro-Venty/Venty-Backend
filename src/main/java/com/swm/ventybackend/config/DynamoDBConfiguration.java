@@ -5,7 +5,6 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
@@ -41,11 +40,6 @@ public class DynamoDBConfiguration {
         return new DynamoDBMapper(buildAmazonDynamoDB(), mapperConfig);
     }
 
-//    @Bean
-//    public DynamoDBMapper dynamoDBMapper() {
-//        return new DynamoDBMapper(buildAmazonDynamoDB());
-//    }
-
     @Primary
     @Bean
     public AWSCredentialsProvider awsCredentialsProvider() {
@@ -62,14 +56,4 @@ public class DynamoDBConfiguration {
                 .withCredentials(awsCredentialsProvider())
                 .build();
     }
-//
-//    private AmazonDynamoDB buildAmazonDynamoDB() {
-//        return AmazonDynamoDBClientBuilder
-//                .standard()
-//                .withEndpointConfiguration(
-//                        new AwsClientBuilder.EndpointConfiguration(dynamodbEndpoint,awsRegion))
-//                .withCredentials(new AWSStaticCredentialsProvider(
-//                        new BasicAWSCredentials(dynamodbAccessKey,dynamodbSecretKey)))
-//                .build();
-//    }
 }
