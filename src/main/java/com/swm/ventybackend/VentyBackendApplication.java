@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 // test
 @RestController
-
 @SpringBootApplication
 public class VentyBackendApplication {
 
