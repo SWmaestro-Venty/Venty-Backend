@@ -64,5 +64,11 @@ jobs:
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
           --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},bundleType=zip,key=deploy/$GITHUB_SHA.zip
+      env:
+          AWS_DYNAMODB_ENDPOINT: ${{ secrets.AWS_DYNAMODB_ENDPOINT }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_DYNAMODB_ACCESSKEY: ${{ secrets.AWS_DYNAMODB_ACCESSKEY }}
+          AWS_DYNAMODB_SECRETKEY: ${{ secrets.AWS_DYNAMODB_SECRETKEY }}
+        
       
     
