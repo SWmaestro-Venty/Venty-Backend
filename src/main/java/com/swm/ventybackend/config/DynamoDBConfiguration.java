@@ -16,16 +16,16 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class DynamoDBConfiguration {
 
-    @Value("${aws.dynamodb.endpoint}")
+    @Value("${AWS_DYNAMODB_ENDPOINT}")
     private String dynamodbEndpoint;
 
-    @Value("${aws.region}")
+    @Value("${AWS_REGION}")
     private String awsRegion;
 
-    @Value("${aws.dynamodb.accessKey}")
+    @Value("${AWS_DYNAMODB_ACCESSKEY}")
     private String dynamodbAccessKey;
 
-    @Value("${aws.dynamodb.secretKey}")
+    @Value("${AWS_DYNAMODB_SECRETKEY}")
     private String dynamodbSecretKey;
 
 
