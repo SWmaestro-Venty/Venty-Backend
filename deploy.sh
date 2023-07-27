@@ -21,10 +21,5 @@ fi
 
 echo "> $JAR_PATH 배포" #3
 nohup java -jar \
-        -Dspring.config.location=classpath:/applcation.properties,/home/ec2-user/app/application-aws.properties \
+        -Dspring.profiles.active=dev \
         build/libs/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
-
-#nohup java -jar \
-#        -Dspring.config.location=classpath:/applcation.properties,/home/ec2-user/app/application-aws.properties
-#        -Dspring.profiles.active=dev \
-#        build/libs/$JAR_NAME > $REPOSITORY/nohup.out 2>&1 &

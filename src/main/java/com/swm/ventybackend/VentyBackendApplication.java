@@ -16,6 +16,6 @@ public class VentyBackendApplication {
 
 	@GetMapping
 	public String helloWorld() {
-		return "Hello World This is CI/CD Test Sentence Twice!";
+		return "23.07.27 Ver.";
 	}
 }
