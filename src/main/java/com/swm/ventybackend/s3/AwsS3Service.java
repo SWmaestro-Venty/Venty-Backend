@@ -63,8 +63,8 @@ public class AwsS3Service {
             File thumbnailFile = new File(thumbnailFileName);
             Thumbnails.Builder builder;
             try {
-                BufferedImage orginalImage = ImageIO.read(file.getInputStream());
-                builder = Thumbnails.of(orginalImage).size(100, 100);
+                BufferedImage originalImage = ImageIO.read(file.getInputStream());
+                builder = Thumbnails.of(originalImage).size(100, 100);
                 builder.toFile(thumbnailFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);

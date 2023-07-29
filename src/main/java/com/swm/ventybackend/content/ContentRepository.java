@@ -1,13 +1,16 @@
 package com.swm.ventybackend.content;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 @Setter
@@ -39,4 +42,19 @@ public class ContentRepository {
                                 )));
         return "Content Id : " + contentId + " Updated!";
     }
+
+
+    public List<Content> getContent() {
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withLimit(10);
+        List<Content> scannedContentList = dynamoDBMapper.scan(Content.class, scanExpression);
+        List<Content> resultContentList = new ArrayList<>();
+        scannedContentList.forEach(scannedContent -> {
+            if (!scannedContent.getContentId().startsWith("thumbnails_")) {
+                resultContentList.add(scannedContent);
+            }
+        });
+        return resultContentList;
+    }
+
 }
