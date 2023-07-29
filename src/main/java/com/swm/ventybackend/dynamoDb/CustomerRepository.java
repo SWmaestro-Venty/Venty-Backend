@@ -35,6 +35,6 @@ public class CustomerRepository {
                                 new ExpectedAttributeValue(
                                         new AttributeValue().withS(customerId)
                                 )));
-        return customerId;
+        return "customer Id : " + customerId + " Updated!";
     }
 }
