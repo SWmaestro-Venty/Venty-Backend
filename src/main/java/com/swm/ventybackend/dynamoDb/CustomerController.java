@@ -22,7 +22,7 @@ public class CustomerController {
 
     @DeleteMapping("/delete/customer/{id}")
     public String deleteCustomerById(@PathVariable("id") String customerId) {
-        return  customerRepository.deleteCustomerById(customerId);
+        return customerRepository.deleteCustomerById(customerId);
     }
 
     @PutMapping("/update/customer/{id}")

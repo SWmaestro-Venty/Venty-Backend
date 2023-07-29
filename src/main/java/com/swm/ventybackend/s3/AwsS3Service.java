@@ -1,13 +1,18 @@
 package com.swm.ventybackend.s3;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.swm.ventybackend.content.Content;
+import com.swm.ventybackend.content.ContentController;
+import com.swm.ventybackend.content.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnailator;
 import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,10 +34,22 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AwsS3Service {
 
+    // DynamoDB 연동 로직 추가 (230729)
+    // @TODO : REFACTORING - ContentController 기능을 가져다 씀.. 구조적 불합리성 개선 필요
+    @Autowired
+    private DynamoDBMapper dynamoDBMapper;
+
     @Value("${AWS_S3_BUCKET}")
     private String bucket;
 
+    @Value("${AWS_S3_BUCKET_CONTENT_URL}")
+    private String contentUrl;
+
+    @Value("${AWS_S3_BUCKET_THUMBNAIL_URL}")
+    private String thumbnailUrl;
+
     private final AmazonS3 amazonS3;
+
 
     public List<String> uploadFile(List<MultipartFile> multipartFile) {
         List<String> fileNameList = new ArrayList<>();
@@ -41,6 +58,7 @@ public class AwsS3Service {
             String fileName = createFileName(file.getOriginalFilename());
 
             // Thumbnails 로직 추가 (230729)
+            // @TODO : REFACTORING - 함수화 및 try-catch-resources 확인
             String thumbnailFileName = "thumbnails_" + fileName;
             File thumbnailFile = new File(thumbnailFileName);
             Thumbnails.Builder builder;
@@ -65,6 +83,21 @@ public class AwsS3Service {
             }
 
             fileNameList.add(fileName);
+        });
+
+        // DynamoDB 연동 로직 추가 (230729)
+        // @TODO : REFACTORING - ContentController 기능을 가져다 씀.. 구조적 불합리성 개선 필요
+        ContentRepository contentRepository = new ContentRepository();
+        contentRepository.setDynamoDBMapper(this.dynamoDBMapper);
+        fileNameList.forEach(url -> {
+            Content content = new Content();
+            content.setContentId("thumbnails_" + url);
+            content.setFileUrl(thumbnailUrl + url);
+            contentRepository.saveContent(content);
+
+            content.setContentId(url);
+            content.setFileUrl(contentUrl + url);
+            contentRepository.saveContent(content);
         });
 
         return fileNameList;
