@@ -2,6 +2,8 @@ package com.swm.ventybackend.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.type.descriptor.jdbc.TinyIntJdbcType;
 import org.joda.time.DateTime;
 
@@ -33,25 +35,15 @@ public class User {
     @Column(name = "nickname")
     private String nickName;
 
+    @ColumnDefault("1")
     @Column(name = "status")
     private Integer status;
 
-    @Basic
+    @CreationTimestamp
     @Column(name = "created_date")
-    private Timestamp created_date;
+    private Timestamp createdDate;
 
     @Column(name = "deleted_date")
-    private Timestamp deleted_date = null;
+    private Timestamp deletedDate = null;
 
-    @Builder
-    public User(String email, String password, String userName, Integer gender, String nickName, Integer status, Timestamp created_date) {
-        this.email = email;
-        this.password = password;
-        this.userName = userName;
-        this.gender = gender;
-        this.nickName = nickName;
-        this.status = status;
-        this.created_date = created_date;
-        this.deleted_date = null;
-    }
 }
