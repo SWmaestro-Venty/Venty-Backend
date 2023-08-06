@@ -1,11 +1,9 @@
-package com.swm.ventybackend.user;
+package com.swm.ventybackend.users;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.type.descriptor.jdbc.TinyIntJdbcType;
-import org.joda.time.DateTime;
 
 import java.sql.Timestamp;
 
@@ -13,12 +11,12 @@ import java.sql.Timestamp;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table
-public class User {
+@Table(name = "users")
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long usersId;
 
     @Column(name = "email")
     private String email;
@@ -26,8 +24,8 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "users_name")
+    private String usersName;
 
     @Column(name = "gender")
     private Integer gender;
