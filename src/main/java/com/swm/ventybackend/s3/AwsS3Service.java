@@ -6,11 +6,9 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.swm.ventybackend.content.Content;
-import com.swm.ventybackend.content.ContentController;
-import com.swm.ventybackend.content.ContentRepository;
+import com.swm.ventybackend.content_dynamo.ContentDynamo;
+import com.swm.ventybackend.content_dynamo.ContentDynamoRepository;
 import lombok.RequiredArgsConstructor;
-import net.coobird.thumbnailator.Thumbnailator;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +22,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -87,17 +83,17 @@ public class AwsS3Service {
 
         // DynamoDB 연동 로직 추가 (230729)
         // @TODO : REFACTORING - ContentController 기능을 가져다 씀.. 구조적 불합리성 개선 필요
-        ContentRepository contentRepository = new ContentRepository();
-        contentRepository.setDynamoDBMapper(this.dynamoDBMapper);
+        ContentDynamoRepository contentDynamoRepository = new ContentDynamoRepository();
+        contentDynamoRepository.setDynamoDBMapper(this.dynamoDBMapper);
         fileNameList.forEach(url -> {
-            Content content = new Content();
-            content.setContentId("thumbnails_" + url);
-            content.setFileUrl(thumbnailUrl + url);
-            contentRepository.saveContent(content);
+            ContentDynamo contentDynamo = new ContentDynamo();
+            contentDynamo.setContentId("thumbnails_" + url);
+            contentDynamo.setFileUrl(thumbnailUrl + url);
+            contentDynamoRepository.saveContent(contentDynamo);
 
-            content.setContentId(url);
-            content.setFileUrl(contentUrl + url);
-            contentRepository.saveContent(content);
+            contentDynamo.setContentId(url);
+            contentDynamo.setFileUrl(contentUrl + url);
+            contentDynamoRepository.saveContent(contentDynamo);
         });
 
         return fileNameList;

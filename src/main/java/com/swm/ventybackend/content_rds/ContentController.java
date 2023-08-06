@@ -38,6 +38,7 @@ public class ContentController {
                          @Nullable Long commentId, List<MultipartFile> multipartFiles) {
 
         // @TODO : 업로드된 파일 개수만큼 content DB 생성되어야 함 (이미지 5개, DB도 5개)
+        // @TODO : 생성된 썸네일 파일 삭제
         List<String> fileNameList = contentService.uploadFile(multipartFiles);
 
         Content content = new Content();

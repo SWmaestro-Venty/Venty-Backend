@@ -2,6 +2,7 @@ package com.swm.ventybackend.love;
 
 
 import com.swm.ventybackend.collection.Collection;
+import com.swm.ventybackend.feed.Feed;
 import com.swm.ventybackend.users.Users;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,9 +20,9 @@ public class Love {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long loveId;
 
-//    @OneToOne
-//    @JoinColumn(name = "feed_id")
-//    private Feed feed;
+    @OneToOne
+    @JoinColumn(name = "feed_id")
+    private Feed feed;
 //
     @OneToOne
     @JoinColumn(name = "collection_id")
