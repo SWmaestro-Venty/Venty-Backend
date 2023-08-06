@@ -12,7 +12,7 @@ public class ClubController {
 
     private final ClubService clubService;
 
-    @PostMapping("/join")
+    @PostMapping("/create")
     public String create(@RequestParam Integer category, String name) {
         Club club = new Club();
         club.setCategory(category);

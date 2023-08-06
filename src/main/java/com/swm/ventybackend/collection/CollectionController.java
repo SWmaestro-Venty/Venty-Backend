@@ -17,7 +17,8 @@ public class CollectionController {
     private final ClubService clubService;
     private final UsersService usersService;
 
-    @PostMapping("/join")
+
+    @PostMapping("/create")
     public String create(@RequestParam String name, Long clubId, Long usersId) {
         Collection collection = new Collection();
         collection.setCollectionName(name);
@@ -29,7 +30,8 @@ public class CollectionController {
         collection.setUsers(users);
 
         Long collectionId = collectionService.saveCollection(collection);
-        return usersId +"번 유저 / " + clubId +"번 클럽 / " + collectionId + "번 그룹 등록 완료";
+
+        return usersId +"번 유저 / " + clubId +"번 클럽 / " + collectionId + "번 컬렉션 등록 완료";
     }
 
     @DeleteMapping("/delete")
