@@ -1,4 +1,4 @@
-package com.swm.ventybackend.content;
+package com.swm.ventybackend.content_dynamo;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -8,33 +8,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @Setter
-public class ContentRepository {
+public class ContentDynamoRepository {
 
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
-    public Content saveContent(Content content) {
-        dynamoDBMapper.save(content);
-        return content;
+    public ContentDynamo saveContent(ContentDynamo contentDynamo) {
+        dynamoDBMapper.save(contentDynamo);
+        return contentDynamo;
     }
 
-    public Content getContentById(String contentId) {
-        return dynamoDBMapper.load(Content.class, contentId);
+    public ContentDynamo getContentById(String contentId) {
+        return dynamoDBMapper.load(ContentDynamo.class, contentId);
     }
 
     public String deleteContentById(String contentId) {
-        dynamoDBMapper.delete(dynamoDBMapper.load(Content.class, contentId));
+        dynamoDBMapper.delete(dynamoDBMapper.load(ContentDynamo.class, contentId));
         return "Content Id : " + contentId + " Deleted!";
     }
 
-    public String updateContent(String contentId, Content content) {
-        dynamoDBMapper.save(content,
+    public String updateContent(String contentId, ContentDynamo contentDynamo) {
+        dynamoDBMapper.save(contentDynamo,
                 new DynamoDBSaveExpression()
                         .withExpectedEntry("contentId",
                                 new ExpectedAttributeValue(
@@ -44,17 +42,17 @@ public class ContentRepository {
     }
 
 
-    public List<Content> getContent() {
+    public List<ContentDynamo> getContent() {
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
                 .withLimit(10);
-        List<Content> scannedContentList = dynamoDBMapper.scan(Content.class, scanExpression);
-        List<Content> resultContentList = new ArrayList<>();
-        scannedContentList.forEach(scannedContent -> {
-            if (!scannedContent.getContentId().startsWith("thumbnails_")) {
-                resultContentList.add(scannedContent);
+        List<ContentDynamo> scannedContentListDynamo = dynamoDBMapper.scan(ContentDynamo.class, scanExpression);
+        List<ContentDynamo> resultContentListDynamo = new ArrayList<>();
+        scannedContentListDynamo.forEach(scannedContentDynamo -> {
+            if (!scannedContentDynamo.getContentId().startsWith("thumbnails_")) {
+                resultContentListDynamo.add(scannedContentDynamo);
             }
         });
-        return resultContentList;
+        return resultContentListDynamo;
     }
 
 }
