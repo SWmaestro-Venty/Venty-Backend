@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UsersCollection {
+public class UsersController {
 
     private final UsersService usersService;
 
-    @PostMapping("/join")
+    @PostMapping("/create")
     public String create(@RequestParam String email, String password, String users_name,
                          Integer gender, String nickname, Integer status) {
         Users users = new Users();
