@@ -5,8 +5,11 @@ import com.swm.ventybackend.club.ClubService;
 import com.swm.ventybackend.users.Users;
 import com.swm.ventybackend.users.UsersService;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/collection")
@@ -47,6 +50,11 @@ public class CollectionController {
         } else {
             return collectionService.findCollectionByName(name).toString();
         }
+    }
+
+    @GetMapping("/findByUserId")
+    public List<Collection> findCollectionByUserIdOrName(@RequestParam @Nullable Long usersId) {
+        return collectionService.findCollectionByUsersId(usersId);
     }
 
     @GetMapping("/all")

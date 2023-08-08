@@ -1,5 +1,6 @@
 package com.swm.ventybackend.collection;
 
+import com.swm.ventybackend.users.Users;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,12 @@ public class CollectionRepository {
                 Collection.class)
                 .setParameter("findName", findName)
                 .getSingleResult();
+    }
+
+    public List<Collection> findByUsersId(Users users) {
+        return em.createQuery("SELECT collection FROM Collection collection WHERE collection.users = :users", Collection.class)
+                .setParameter("users", users)
+                .getResultList();
     }
 
     public List<Collection> findAll() {

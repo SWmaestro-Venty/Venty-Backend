@@ -42,5 +42,3 @@ public class Collection {
     @JoinColumn(name = "users_id")
     private Users users;
 }
-
-// @TODO : collection은 만든 사람 정보를 포함해야 하며, 만들어진 collection -> love 테이블 생성
