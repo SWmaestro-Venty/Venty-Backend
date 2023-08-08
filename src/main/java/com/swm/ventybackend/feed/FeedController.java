@@ -10,6 +10,8 @@ import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/feed")
 @RequiredArgsConstructor
@@ -48,7 +50,15 @@ public class FeedController {
         }
     }
 
+    @GetMapping("/findByCollectionId")
+    public List<Feed> findByCollectionId(@RequestParam Long collectionId) {
+        Collection collection = collectionService.findCollectionById(collectionId);
+        return feedService.findFeedByCollectionId(collection);
+    }
+
     @GetMapping("/all")
     public String readAll() { return feedService.findAllFeed().toString(); }
+
+
 }
 

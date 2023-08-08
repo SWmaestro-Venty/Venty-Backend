@@ -1,5 +1,6 @@
 package com.swm.ventybackend.feed;
 
+import com.swm.ventybackend.collection.Collection;
 import com.swm.ventybackend.feed.Feed;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -29,6 +30,12 @@ public class FeedRepository {
 
     public List<Feed> findAll() {
         return em.createQuery("SELECT feed FROM Feed feed", Feed.class)
+                .getResultList();
+    }
+
+    public List<Feed> findFeedByCollectionId(Collection collection) {
+        return em.createQuery("SELECT feed FROM Feed feed WHERE feed.collection = :collection", Feed.class)
+                .setParameter("collection", collection)
                 .getResultList();
     }
 }

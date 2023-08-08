@@ -1,5 +1,6 @@
 package com.swm.ventybackend.feed;
 
+import com.swm.ventybackend.collection.Collection;
 import com.swm.ventybackend.feed.Feed;
 import com.swm.ventybackend.feed.FeedRepository;
 import jakarta.transaction.Transactional;
@@ -27,4 +28,8 @@ public class FeedService {
     public Feed findFeedByTitle(String title) { return feedRepository.findByTitle(title); }
 
     public List<Feed> findAllFeed() { return feedRepository.findAll(); }
+
+    public List<Feed> findFeedByCollectionId(Collection collection) {
+        return feedRepository.findFeedByCollectionId(collection);
+    }
 }
