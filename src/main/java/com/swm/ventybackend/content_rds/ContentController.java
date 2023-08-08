@@ -40,42 +40,47 @@ public class ContentController {
         // @TODO : 업로드된 파일 개수만큼 content DB 생성되어야 함 (이미지 5개, DB도 5개)
         // @TODO : 생성된 썸네일 파일 삭제
         List<String> fileNameList = contentService.uploadFile(multipartFiles);
+        String returnMessage = "";
 
-        Content content = new Content();
-        content.setOriginalUrl(fileNameList.get(0));
-        content.setThumbnailUrl(fileNameList.get(1));
+        for(int i = 0; i < fileNameList.size() / 2 ; i+=2) {
+            Content content = new Content();
+            content.setOriginalUrl(fileNameList.get(i));
+            content.setThumbnailUrl(fileNameList.get(i) + 1);
 
-        // @TODO : 아래 3개 관리해줘야함
-        content.setIsImageOrVideo(isImageOrVideo);
-        content.setExtension(extension);
-        content.setSize(size);
+            // @TODO : 아래 3개 관리해줘야함
+            content.setIsImageOrVideo(isImageOrVideo);
+            content.setExtension(extension);
+            content.setSize(size);
 
-        if (status != null) content.setStatus(status);
+            if (status != null) content.setStatus(status);
 
-        if (postId != null) {
-            Post post = postService.findPostById(postId);
-            content.setPost(post);
+            if (postId != null) {
+                Post post = postService.findPostById(postId);
+                content.setPost(post);
+            }
+
+            if (feedId != null) {
+                Feed feed = feedService.findFeedById(feedId);
+                content.setFeed(feed);
+            }
+
+            if (contactId != null) {
+                Contact contact = contactService.findContactByContactId(contactId);
+                content.setContact(contact);
+            }
+
+            if (commentId != null) {
+                Comment comment = commentService.findCommentById(commentId);
+                content.setComment(comment);
+            } else {
+                content.setComment(null);
+            }
+
+            Long contentId = contentService.saveContent(content);
+            returnMessage += (contentId + "번 ");
         }
 
-        if (feedId != null) {
-            Feed feed = feedService.findFeedById(feedId);
-            content.setFeed(feed);
-        }
-
-        if (contactId != null) {
-            Contact contact = contactService.findContactByContactId(contactId);
-            content.setContact(contact);
-        }
-
-        if (commentId != null) {
-            Comment comment = commentService.findCommentById(commentId);
-            content.setComment(comment);
-        } else {
-            content.setComment(null);
-        }
-
-        Long contentId = contentService.saveContent(content);
-        return contentId + "번 콘텐츠 등록 완료";
+        return returnMessage + "콘텐츠 등록 완료";
     }
 
     @DeleteMapping("/delete")
@@ -91,5 +96,10 @@ public class ContentController {
 
     @GetMapping("/all")
     public String readAll() { return contentService.findAllContent().toString(); }
+
+    @GetMapping("/getTenRandomContents")
+    public List<Content> getTenRandomContents() {
+        return contentService.getTenContents();
+    }
 }
 

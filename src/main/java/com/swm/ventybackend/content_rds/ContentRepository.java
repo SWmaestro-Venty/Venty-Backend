@@ -31,4 +31,10 @@ public class ContentRepository {
         return em.createQuery("SELECT content FROM Content content", Content.class)
                 .getResultList();
     }
+
+    public List<Content> getTenContents() {
+        return em.createQuery("SELECT content FROM Content content", Content.class)
+                .setMaxResults(10)
+                .getResultList();
+    }
 }

@@ -51,7 +51,7 @@ public class ContentService {
 
     public Content findContentById(Long id) { return contentRepository.findById(id); }
 
-//    public Content findContentByName(String name) { return contentRepository.findByName(name); }
+//    public Content findContentByName(String name) { return co ntentRepository.findByName(name); }
 
     public List<Content> findAllContent() { return contentRepository.findAll(); }
 
@@ -100,5 +100,9 @@ public class ContentService {
         } catch (StringIndexOutOfBoundsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
         }
+    }
+
+    public List<Content> getTenContents() {
+        return contentRepository.getTenContents();
     }
 }
