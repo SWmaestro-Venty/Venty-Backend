@@ -20,7 +20,7 @@ public class CollectionController {
     private final CollectionService collectionService;
 
 
-    @PostMapping("/make")
+    @PostMapping("/create")
     public String create(@RequestParam String name, Long clubId, Long usersId) {
 
         Collection collection = new Collection();
