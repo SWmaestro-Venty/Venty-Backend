@@ -28,9 +28,8 @@ public class CollectionService {
 
     public Collection findCollectionByName(String name) { return collectionRepository.findByName(name); }
 
-    public List<Collection> findCollectionByUsersId(Long id) {
-        Users users = usersRepository.findById(id);
-        return collectionRepository.findByUsersId(users);
+    public List<Collection> findCollectionByUsersId(Long usersId) {
+        return collectionRepository.findByUsersId(usersId);
     }
 
     public List<Collection> findAllCollection() { return collectionRepository.findAll(); }
