@@ -28,9 +28,9 @@ public class CollectionRepository {
                 .getSingleResult();
     }
 
-    public List<Collection> findByUsersId(Users users) {
-        return em.createQuery("SELECT collection FROM Collection collection WHERE collection.users = :users", Collection.class)
-                .setParameter("users", users)
+    public List<Collection> findByUsersId(Long usersId) {
+        return em.createQuery("SELECT collection FROM Collection collection WHERE collection.usersId = :usersId", Collection.class)
+                .setParameter("usersId", usersId)
                 .getResultList();
     }
 
