@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 @RestController
@@ -17,20 +18,16 @@ import java.util.List;
 public class CollectionController {
 
     private final CollectionService collectionService;
-    private final ClubService clubService;
-    private final UsersService usersService;
 
 
-    @PostMapping("/create")
+    @PostMapping("/make")
     public String create(@RequestParam String name, Long clubId, Long usersId) {
+
         Collection collection = new Collection();
         collection.setCollectionName(name);
 
-        Club club = clubService.findClubById(clubId);
-        collection.setClub(club);
-
-        Users users = usersService.findUsersById(usersId);
-        collection.setUsers(users);
+        collection.setClubId(clubId);
+        collection.setUsersId(usersId);
 
         Long collectionId = collectionService.saveCollection(collection);
 
