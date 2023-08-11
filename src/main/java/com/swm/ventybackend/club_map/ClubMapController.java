@@ -30,7 +30,7 @@ public class ClubMapController {
         collection.setUsersId(usersId);
         Long collectionId = collectionService.saveCollection(collection);
 
-        return clubId + "번 클럽, " + usersId + "번 유저 " + collectionId + "번 기본 컬렉션 맵핑 완료";
+        return clubId + "번 클럽, " + usersId + "번 유저 맵핑, " + collectionId + "번 기본 컬렉션 생성 완료";
     }
 
     @DeleteMapping("/delete")

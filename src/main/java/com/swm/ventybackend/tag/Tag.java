@@ -1,4 +1,4 @@
-package com.swm.ventybackend.club;
+package com.swm.ventybackend.tag;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,31 +13,30 @@ import java.sql.Timestamp;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "club")
-public class Club {
+@Table(name = "tag")
+public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long clubId;
+    private Long tagId;
 
-    @Column(name = "category")
-    private Integer category;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "club_name")
-    private String clubName;
+    @Column(name = "type")
+    private String type;
 
     @Column(name = "created_date")
     @CreationTimestamp
     private Timestamp createdDate;
 
     @Column(name = "deleted_date")
-    private Timestamp deletedDate = null;
+    @CreationTimestamp
+    private Timestamp deletedDate;
 
     @Column(name = "status")
     @ColumnDefault("1")
     private Integer status;
 
-    @Column(name = "thumbnail_image_url")
-    @ColumnDefault("null")
-    private String thumbnailImageUrl;
+
 }

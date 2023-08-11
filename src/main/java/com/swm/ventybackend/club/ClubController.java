@@ -13,11 +13,12 @@ public class ClubController {
     private final ClubService clubService;
 
     @PostMapping("/create")
-    public String create(@RequestParam Integer category, String name) {
+    public String create(@RequestParam Integer category, String name, @Nullable String thumbnailImageUrl) {
+        // @TODO thumbnailImageUrl File로 변경
         Club club = new Club();
         club.setCategory(category);
         club.setClubName(name);
-
+        club.setThumbnailImageUrl(thumbnailImageUrl);
         Long clubId = clubService.saveClub(club);
         return clubId + "번 그룹 등록 완료";
     }
