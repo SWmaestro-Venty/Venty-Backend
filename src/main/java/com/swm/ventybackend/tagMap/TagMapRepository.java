@@ -1,4 +1,4 @@
-package com.swm.ventybackend.tag.tagMap;
+package com.swm.ventybackend.tagMap;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
