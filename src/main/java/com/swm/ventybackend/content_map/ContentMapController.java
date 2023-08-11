@@ -15,6 +15,8 @@ public class ContentMapController {
 
     @PostMapping("/create")
     public String create(@RequestParam Long contentId, @Nullable Long collectionId, @Nullable Long feedId) {
+        // @TODO : 두개 다 입력 못받을 때는?
+        // @TODO : collection, feed 존재 여부
         ContentMap contentMap = new ContentMap();
         contentMap.setContentId(contentId);
 

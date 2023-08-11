@@ -15,6 +15,7 @@ public class SubscribeMapController {
 
     @PostMapping("/create")
     public String create(@RequestParam Long usersId, Long collectionId) {
+        // @TODO collectionId를 가진 collection이 실제로 존재하는지 확인해야함.
         SubscribeMap subscribeMap = new SubscribeMap();
         subscribeMap.setUsersId(usersId);
         subscribeMap.setCollectionId(collectionId);

@@ -26,7 +26,7 @@ public class UsersRepository {
     }
 
     public Users findByName(String findName) {
-        return em.createQuery("SELECT users FROM Users users WHERE users.nickName = :findName", Users.class)
+        return em.createQuery("SELECT users FROM Users users WHERE users.usersName = :findName", Users.class)
                 .setParameter("findName", findName)
                 .getSingleResult();
     }

@@ -15,8 +15,11 @@ public class TagController {
 
     @PostMapping("/create")
     public String create(@RequestParam String name, String type, @Nullable Integer status) {
-        Tag searchTag = tagService.findTagByName(name);
-        if (searchTag == null) {
+        try {
+            Tag searchTag = tagService.findTagByName(name);
+            Long searchTagId = searchTag.getTagId();
+            return name + " 태그는 " + searchTagId + " 번 태그로 이미 존재합니다.";
+        } catch (Exception e) {
             Tag tag = new Tag();
             tag.setName(name);
             tag.setType(type);
@@ -27,9 +30,6 @@ public class TagController {
             Long tagId = tagService.saveTag(tag);
             return tagId + "번 태그 생성 완료";
         }
-
-        Long searchTagId = searchTag.getTagId();
-        return name + " 태그는 " + searchTagId + " 번 태그로 이미 존재합니다.";
     }
 
     @DeleteMapping("/delete")
