@@ -22,14 +22,13 @@ public class FeedController {
 
     @PostMapping("/create")
     public String create(@RequestParam String title, String context,
-                         @Nullable Integer status, Long collectionId) {
+                         @Nullable Integer status, Long usersId, Long collectionId) {
         Feed feed = new Feed();
         feed.setFeedTitle(title);
         feed.setFeedContext(context);
+        feed.setUsersId(usersId);
+        feed.setCollectionId(collectionId);
         if (status != null) feed.setStatus(status);
-
-        Collection collection = collectionService.findCollectionById(collectionId);
-        feed.setCollection(collection);
 
         Long feedId = feedService.saveFeed(feed);
         return feedId + "번 피드 등록 완료";
@@ -50,11 +49,6 @@ public class FeedController {
         }
     }
 
-    @GetMapping("/findByCollectionId")
-    public List<Feed> findByCollectionId(@RequestParam Long collectionId) {
-        Collection collection = collectionService.findCollectionById(collectionId);
-        return feedService.findFeedByCollectionId(collection);
-    }
 
     @GetMapping("/all")
     public String readAll() { return feedService.findAllFeed().toString(); }

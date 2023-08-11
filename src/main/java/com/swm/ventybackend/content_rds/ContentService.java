@@ -51,7 +51,7 @@ public class ContentService {
 
     public Content findContentById(Long id) { return contentRepository.findById(id); }
 
-//    public Content findContentByName(String name) { return co ntentRepository.findByName(name); }
+    public List<Content> findContentsByUsersId(Long usersId) { return contentRepository.findContentsByUsersId(usersId); }
 
     public List<Content> findAllContent() { return contentRepository.findAll(); }
 

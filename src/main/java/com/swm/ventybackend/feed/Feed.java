@@ -28,8 +28,9 @@ public class Feed {
     @ColumnDefault("1")
     private Integer status;
 
-    @ManyToOne
-    @JoinColumn(name = "collection_id")
-    private Collection collection;
+    @Column(name = "users_id")
+    private Long usersId;
 
+    @Column(name = "collection_id")
+    private Long collectionId;
 }

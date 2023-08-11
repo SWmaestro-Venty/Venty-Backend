@@ -12,15 +12,13 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
 
     private final BoardService boardService;
-    private final ClubService clubService;
 
     @PostMapping("/create")
-    public String create(@RequestParam String name, Integer category, @Nullable Long clubId) {
-        Club club = clubService.findClubById(clubId);
+    public String create(@RequestParam String name, Integer category, Long clubId) {
         Board board = new Board();
         board.setName(name);
         board.setCategory(category);
-        board.setClub(club);
+        board.setClubId(clubId);
 
         Long boardId = boardService.saveBoard(board);
         return boardId + "번 보드 등록 완료";

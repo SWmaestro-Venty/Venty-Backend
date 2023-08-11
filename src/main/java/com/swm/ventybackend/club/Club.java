@@ -36,4 +36,8 @@ public class Club {
     @Column(name = "status")
     @ColumnDefault("1")
     private Integer status;
+
+    @Column(name = "thumbnail_image_url")
+    @ColumnDefault("null")
+    private String thumbnailImageUrl;
 }

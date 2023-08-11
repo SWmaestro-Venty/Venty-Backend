@@ -1,11 +1,10 @@
-package com.swm.ventybackend.contact;
+package com.swm.ventybackend.tag;
 
-
-import com.swm.ventybackend.users.Users;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -14,30 +13,30 @@ import java.sql.Timestamp;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "contact")
-public class Contact {
+@Table(name = "tag")
+public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long contactId;
+    private Long tagId;
 
-    @Column(name = "category")
-    private Integer category;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "type")
+    private String type;
 
     @Column(name = "created_date")
     @CreationTimestamp
     private Timestamp createdDate;
 
+    @Column(name = "deleted_date")
+    @CreationTimestamp
+    private Timestamp deletedDate;
+
     @Column(name = "status")
+    @ColumnDefault("1")
     private Integer status;
 
-    @Column(name = "title")
-    private String title;
 
-    @Column(name = "contact_context")
-    private String contactContext;
-
-    @ManyToOne
-    @JoinColumn(name = "users_id")
-    private Users users;
 }

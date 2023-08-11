@@ -29,7 +29,4 @@ public class FeedService {
 
     public List<Feed> findAllFeed() { return feedRepository.findAll(); }
 
-    public List<Feed> findFeedByCollectionId(Collection collection) {
-        return feedRepository.findFeedByCollectionId(collection);
-    }
 }
