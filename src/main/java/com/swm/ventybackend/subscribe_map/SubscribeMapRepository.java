@@ -21,7 +21,7 @@ public class SubscribeMapRepository {
     public SubscribeMap findById(Long id) { return em.find(SubscribeMap.class, id); }
 
     public List<SubscribeMap> findAll() {
-        return em.createQuery("SELECT subscribeMap FROM SubscribeMap subScribeMap", SubscribeMap.class)
+        return em.createQuery("SELECT subScribeMap FROM SubscribeMap subScribeMap", SubscribeMap.class)
                 .getResultList();
     }
 }

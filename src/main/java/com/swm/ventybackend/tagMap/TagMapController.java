@@ -18,6 +18,7 @@ public class TagMapController {
 
     @PostMapping("/create")
     public String create(@RequestParam @Nullable Long tagId, @Nullable String tagName, Long contentId) {
+        // @TODO : contentId에 해당하는 content 존재 여부를 확인해야 함.
         TagMap tagMap = new TagMap();
 
         if (tagName != null) {

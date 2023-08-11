@@ -34,12 +34,13 @@ public class UsersController {
     }
 
     @GetMapping("/findByIdOrName")
-    public String read(@RequestParam @Nullable Long id, String name) {
-        if(id != null) {
-            return usersService.findUsersById(id).toString();
-        } else {
-            return usersService.findUsersByName(name).toString();
-        }
+    public String read(@RequestParam Long id) {
+        return usersService.findUsersById(id).toString();
+    }
+
+    @GetMapping("/findByName")
+    public String findByName(@RequestParam String name) {
+        return usersService.findUsersByName(name).toString();
     }
 
     @GetMapping("/all")

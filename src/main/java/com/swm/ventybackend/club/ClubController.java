@@ -18,7 +18,8 @@ public class ClubController {
         Club club = new Club();
         club.setCategory(category);
         club.setClubName(name);
-        club.setThumbnailImageUrl(thumbnailImageUrl);
+        if (thumbnailImageUrl != null)
+            club.setThumbnailImageUrl(thumbnailImageUrl);
         Long clubId = clubService.saveClub(club);
         return clubId + "번 그룹 등록 완료";
     }
