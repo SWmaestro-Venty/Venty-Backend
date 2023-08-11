@@ -42,6 +42,11 @@ public class Users {
     private Timestamp createdDate;
 
     @Column(name = "deleted_date")
-    private Timestamp deletedDate = null;
+    @ColumnDefault("null")
+    private Timestamp deletedDate;
+
+    @Column(name = "profile_image")
+    @ColumnDefault("null")
+    private String profileImage;
 
 }
