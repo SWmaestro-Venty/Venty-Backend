@@ -21,11 +21,11 @@ public class ContentRepository {
 
     public Content findById(Long id) { return em.find(Content.class, id); }
 
-//    public Content findByName(String findName) {
-//        return em.createQuery("SELECT content FROM Content content WHERE content.contentName = :findName", Content.class)
-//                .setParameter("findName", findName)
-//                .getSingleResult();
-//    }
+    public List<Content> findContentsByUsersId(Long usersId) {
+        return em.createQuery("SELECT content FROM Content content WHERE content.usersId =:usersId", Content.class)
+                .setParameter("usersId", usersId)
+                .getResultList();
+    }
 
     public List<Content> findAll() {
         return em.createQuery("SELECT content FROM Content content", Content.class)
