@@ -23,7 +23,6 @@ public class Board {
     @Column(name = "board_category")
     private Integer category;
 
-    @OneToOne
-    @JoinColumn(name = "club_id")
-    private Club club;
+    @Column(name = "club_id")
+    private Long clubId;
 }
