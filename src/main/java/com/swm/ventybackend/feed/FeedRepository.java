@@ -33,9 +33,4 @@ public class FeedRepository {
                 .getResultList();
     }
 
-    public List<Feed> findFeedByCollectionId(Collection collection) {
-        return em.createQuery("SELECT feed FROM Feed feed WHERE feed.collection = :collection", Feed.class)
-                .setParameter("collection", collection)
-                .getResultList();
-    }
 }
