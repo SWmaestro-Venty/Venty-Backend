@@ -30,5 +30,5 @@ public class ContentMapService {
         return contentMapRepository.findAll();
     }
 
-
+    public List<ContentMap> findContentIdByCollectionId(Long id) { return contentMapRepository.findAllContentIdByCollectionId(id); }
 }

@@ -39,10 +39,10 @@ public class ContentController {
             if (status != null) content.setStatus(status);
 
             Long contentId = contentService.saveContent(content);
-            returnMessage += (contentId + "번 ");
+            returnMessage = contentId.toString();
         }
 
-        return returnMessage + "콘텐츠 등록 완료";
+        return returnMessage;
     }
 
     @DeleteMapping("/delete")

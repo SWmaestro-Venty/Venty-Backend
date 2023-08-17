@@ -1,5 +1,6 @@
 package com.swm.ventybackend.content_map;
 
+import com.swm.ventybackend.content_rds.Content;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,11 @@ public class ContentMapController {
     @GetMapping("/all")
     public List<ContentMap> readAll() {
         return contentMapService.findAllContentMap();
+    }
+
+    @GetMapping("/findContentIdByCollectionId")
+    public List<ContentMap> findContentIdByCollectionId(@RequestParam Long collectionId) {
+        return contentMapService.findContentIdByCollectionId(collectionId);
     }
 
 }
