@@ -21,13 +21,15 @@ public class CollectionController {
 
 
     @PostMapping("/create")
-    public String create(@RequestParam String name, Long clubId, Long usersId, @Nullable String thumbnailImageUrl) {
+    public String create(@RequestParam String name, Long clubId, Long usersId, @Nullable Integer status, @Nullable String thumbnailImageUrl) {
 
         Collection collection = new Collection();
         collection.setCollectionName(name);
         collection.setClubId(clubId);
         collection.setUsersId(usersId);
         collection.setThumbnailImageUrl(thumbnailImageUrl);
+
+        if (status != null) collection.setStatus(status);
 
         Long collectionId = collectionService.saveCollection(collection);
 
