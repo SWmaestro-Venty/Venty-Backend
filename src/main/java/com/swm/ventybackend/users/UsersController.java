@@ -1,6 +1,7 @@
 package com.swm.ventybackend.users;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +14,8 @@ public class UsersController {
 
     @PostMapping("/create")
     public String create(@RequestParam String email, String password, String users_name,
-                         Integer gender, String nickname, Integer status, String profileImage) {
-        // @TODO : profileImage File로 변경
+                         Integer gender, String nickname, Integer status) {
+        // @TODO : profileImage File로 변경 및 API 분리
         Users users = new Users();
         users.setEmail(email);
         users.setPassword(password);
@@ -22,7 +23,6 @@ public class UsersController {
         users.setGender(gender);
         users.setNickName(nickname);
         users.setStatus(status);
-        users.setProfileImage(profileImage);
         Long usersId = usersService.saveUser(users);
         return usersId + "번 유저 등록 완료";
     }
