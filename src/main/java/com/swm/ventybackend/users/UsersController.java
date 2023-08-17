@@ -43,6 +43,11 @@ public class UsersController {
         return usersService.findUsersByName(name).toString();
     }
 
+    @GetMapping("/findByEmail")
+    public String findByEmail(@RequestParam String email) {
+        return usersService.findUsersByEmail(email).toString();
+    }
+
     @GetMapping("/all")
     public String readAll() {
         return usersService.findAllUsers().toString();

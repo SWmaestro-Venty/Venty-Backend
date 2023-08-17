@@ -31,6 +31,12 @@ public class UsersRepository {
                 .getSingleResult();
     }
 
+    public Users findByEmail(String email) {
+        return em.createQuery("SELECT users FROM Users users WHERE users.email = :email", Users.class)
+                .setParameter("email", email)
+                .getSingleResult();
+    }
+
     public List<Users> findAll() {
         return em.createQuery("SELECT users FROM Users users", Users.class)
                 .getResultList();
