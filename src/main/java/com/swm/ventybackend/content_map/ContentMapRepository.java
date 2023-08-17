@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 @Repository
 @RequiredArgsConstructor
-public class ContentMapRepository {
+public class ContentMapRepository{
 
     @PersistenceContext
     private final EntityManager em;
@@ -22,6 +23,12 @@ public class ContentMapRepository {
 
     public List<ContentMap> findAll() {
         return em.createQuery("SELECT contentMap FROM SubscribeMap contentMap", ContentMap.class)
+                .getResultList();
+    }
+
+    public List<ContentMap> findAllContentIdByCollectionId(Long collectionId) {
+        return em.createQuery("SELECT contentMap.contentId FROM ContentMap contentMap WHERE contentMap.collectionId =: collectionId", ContentMap.class)
+                .setParameter("collectionId", collectionId)
                 .getResultList();
     }
 }
