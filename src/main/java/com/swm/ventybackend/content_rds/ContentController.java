@@ -24,11 +24,11 @@ public class ContentController {
         // @TODO : 생성된 썸네일 파일 삭제
         List<String> fileNameList = contentService.uploadFile(multipartFiles);
         String returnMessage = "";
-
-        for(int i = 0; i < fileNameList.size() / 2 ; i+=2) {
+        System.out.println(fileNameList.size());
+        for(int i = 0; i < fileNameList.size(); i += 2) {
             Content content = new Content();
             content.setOriginalUrl(fileNameList.get(i));
-            content.setThumbnailUrl(fileNameList.get(i) + 1);
+            content.setThumbnailUrl(fileNameList.get(i + 1));
 
             // @TODO : 아래 3개 관리해줘야함
             content.setIsImageOrVideo(isImageOrVideo);
@@ -39,10 +39,10 @@ public class ContentController {
             if (status != null) content.setStatus(status);
 
             Long contentId = contentService.saveContent(content);
-            returnMessage = contentId.toString();
+            returnMessage += (contentId.toString() + ", ");
         }
 
-        return returnMessage;
+        return returnMessage.substring(0, returnMessage.length() - 2);
     }
 
     @DeleteMapping("/delete")
@@ -52,15 +52,15 @@ public class ContentController {
     }
 
     @GetMapping("/findById")
-    public String read(@RequestParam Long id) {
-        return contentService.findContentById(id).toString();
+    public Object read(@RequestParam Long id) {
+        return contentService.findContentById(id);
     }
 
     @GetMapping("/findContentsByUsersId")
     public List<Content> findContentsByUsersId(@RequestParam Long usersId) { return contentService.findContentsByUsersId(usersId); }
 
     @GetMapping("/all")
-    public String readAll() { return contentService.findAllContent().toString(); }
+    public Object readAll() { return contentService.findAllContent(); }
 
     @GetMapping("/getTenRandomContents")
     public List<Content> getTenRandomContents() {
