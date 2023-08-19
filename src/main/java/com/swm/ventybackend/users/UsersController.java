@@ -44,12 +44,12 @@ public class UsersController {
     }
 
     @GetMapping("/findByEmail")
-    public String findByEmail(@RequestParam String email) {
-        return usersService.findUsersByEmail(email).toString();
+    public Object findByEmail(@RequestParam String email) {
+        return usersService.findUsersByEmail(email);
     }
 
     @GetMapping("/all")
-    public String readAll() {
-        return usersService.findAllUsers().toString();
+    public Object readAll() {
+        return usersService.findAllUsers();
     }
 }
