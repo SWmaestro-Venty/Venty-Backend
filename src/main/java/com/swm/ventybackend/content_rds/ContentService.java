@@ -66,7 +66,7 @@ public class ContentService {
             Thumbnails.Builder builder;
             try {
                 BufferedImage originalImage = ImageIO.read(file.getInputStream());
-                builder = Thumbnails.of(originalImage).size(100, 100);
+                builder = Thumbnails.of(originalImage).size(200, 200);
                 builder.toFile(thumbnailFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
