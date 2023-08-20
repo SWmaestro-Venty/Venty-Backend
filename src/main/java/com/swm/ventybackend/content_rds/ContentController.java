@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,14 +18,13 @@ public class ContentController {
 
 
     @PostMapping("/create")
-    public String create(@RequestParam @Nullable Integer status, Integer isImageOrVideo, String extension, String size,
+    public List<String> create(@RequestParam @Nullable Integer status, Integer isImageOrVideo, String extension, String size,
                          Long usersId, List<MultipartFile> multipartFiles) {
 
         // @TODO : isImageOrVideo, extension, size 자동화
         // @TODO : 생성된 썸네일 파일 삭제
+        List<String> returnContentIdList = new ArrayList<>();
         List<String> fileNameList = contentService.uploadFile(multipartFiles);
-        String returnMessage = "";
-        System.out.println(fileNameList.size());
         for(int i = 0; i < fileNameList.size(); i += 2) {
             Content content = new Content();
             content.setOriginalUrl(fileNameList.get(i));
@@ -39,10 +39,10 @@ public class ContentController {
             if (status != null) content.setStatus(status);
 
             Long contentId = contentService.saveContent(content);
-            returnMessage += (contentId.toString() + ", ");
+            returnContentIdList.add(contentId.toString());
         }
 
-        return returnMessage.substring(0, returnMessage.length() - 2);
+        return returnContentIdList;
     }
 
     @DeleteMapping("/delete")
