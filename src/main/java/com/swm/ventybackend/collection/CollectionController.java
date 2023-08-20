@@ -2,6 +2,7 @@ package com.swm.ventybackend.collection;
 
 import com.swm.ventybackend.club.Club;
 import com.swm.ventybackend.club.ClubService;
+import com.swm.ventybackend.content_rds.Content;
 import com.swm.ventybackend.users.Users;
 import com.swm.ventybackend.users.UsersService;
 import jakarta.annotation.Nullable;
@@ -58,4 +59,10 @@ public class CollectionController {
 
     @GetMapping("/all")
     public String readAll() { return collectionService.findAllCollection().toString(); }
+
+    @GetMapping("/setCollectionThumbnailByContentId")
+    public String setCollectionThumbnailByContentId(@RequestParam Long collectionId, Long contentId) {
+        collectionService.setCollectionThumbnailByContentId(collectionId, contentId);
+        return collectionId + "번 컬렉션의 썸네일 변경 완료 : " + contentId + "번 콘텐츠의 썸네일";
+    }
 }

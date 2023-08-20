@@ -1,6 +1,8 @@
 package com.swm.ventybackend.collection;
 
 import com.amazonaws.services.dynamodbv2.xspec.L;
+import com.swm.ventybackend.content_rds.Content;
+import com.swm.ventybackend.content_rds.ContentRepository;
 import com.swm.ventybackend.users.Users;
 import com.swm.ventybackend.users.UsersRepository;
 import jakarta.transaction.Transactional;
@@ -15,7 +17,7 @@ import java.util.List;
 public class CollectionService {
 
     private final CollectionRepository collectionRepository;
-    private final UsersRepository usersRepository;
+    private final ContentRepository contentRepository;
 
     public Long saveCollection(Collection collection) {
         collectionRepository.save(collection);
@@ -33,5 +35,10 @@ public class CollectionService {
     }
 
     public List<Collection> findAllCollection() { return collectionRepository.findAll(); }
+
+    public Collection setCollectionThumbnailByContentId(Long collectionId, Long contentId) {
+        String thumbnailUrl = contentRepository.findById(contentId).getThumbnailUrl();
+        return collectionRepository.updateThumbnail(collectionId, thumbnailUrl);
+    }
 
 }
