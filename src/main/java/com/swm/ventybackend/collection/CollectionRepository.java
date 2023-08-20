@@ -38,4 +38,10 @@ public class CollectionRepository {
         return em.createQuery("SELECT collection FROM Collection collection", Collection.class)
                 .getResultList();
     }
+
+    public Collection updateThumbnail(Long collectionId, String thumbnailUrl) {
+        Collection collection = em.find(Collection.class, collectionId);
+        collection.setThumbnailImageUrl(thumbnailUrl);
+        return collection;
+    }
 }
