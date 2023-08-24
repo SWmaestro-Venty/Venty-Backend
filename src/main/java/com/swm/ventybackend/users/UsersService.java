@@ -2,6 +2,7 @@ package com.swm.ventybackend.users;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +13,10 @@ import java.util.List;
 public class UsersService {
 
     private final UsersRepository usersRepository;
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     public Long saveUser(Users users) {
+        users.hashPassword(bCryptPasswordEncoder);
         usersRepository.save(users);
         return users.getUsersId();
     }
@@ -35,4 +38,6 @@ public class UsersService {
     public List<Users> findAllUsers() {
         return usersRepository.findAll();
     }
+
+    // @TODO : 중복 여부 검사
 }

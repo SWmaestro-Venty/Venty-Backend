@@ -3,6 +3,8 @@ package com.swm.ventybackend.users;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
 
     private final UsersService usersService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/create")
     public String create(@RequestParam String email, String password, String users_name,
@@ -51,5 +56,15 @@ public class UsersController {
     @GetMapping("/all")
     public Object readAll() {
         return usersService.findAllUsers();
+    }
+
+    // @TODO : email로 password만 받아오기 / Users 객체 말고
+    @GetMapping("/passwordTest")
+    public Object passwordTest(@RequestParam String email, String password) {
+        Users users = usersService.findUsersByEmail(email);
+        if(users.checkPassword(password, passwordEncoder)) {
+            return "패스워드가 동일합니다.";
+        }
+        return "패스워드가 다릅니다";
     }
 }
