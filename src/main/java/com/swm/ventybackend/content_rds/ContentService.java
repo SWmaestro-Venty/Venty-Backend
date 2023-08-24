@@ -40,6 +40,9 @@ public class ContentService {
     @Value("${AWS_S3_BUCKET_THUMBNAIL_URL}")
     private String thumbnailUrl;
 
+    @Value("${AWS_CDN_DOMAIN}")
+    private String cdnDomainUrl;
+
     private final AmazonS3 amazonS3;
 
     public Long saveContent(Content content) {
@@ -66,7 +69,7 @@ public class ContentService {
             Thumbnails.Builder builder;
             try {
                 BufferedImage originalImage = ImageIO.read(file.getInputStream());
-                builder = Thumbnails.of(originalImage).size(200, 200);
+                builder = Thumbnails.of(originalImage).size(400, 400);
                 builder.toFile(thumbnailFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -84,8 +87,15 @@ public class ContentService {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
             }
 
-            fileNameList.add(contentUrl + fileName);
-            fileNameList.add(thumbnailUrl + fileName);
+
+//            23.08.24 S3 Direct -> CDN (CloudFront) 도입
+//            fileNameList.add(contentUrl + fileName);
+//            fileNameList.add(thumbnailUrl + fileName);
+
+            // CDN
+            fileNameList.add(cdnDomainUrl + "contents/" + fileName);
+            fileNameList.add(cdnDomainUrl + "thumbnails/thumbnails_" + fileName);
+
         });
         return fileNameList;
     }
