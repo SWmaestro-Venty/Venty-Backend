@@ -37,4 +37,10 @@ public class ContentRepository {
                 .setMaxResults(10)
                 .getResultList();
     }
+
+    public Integer getDownloadCountByContentId(Long contentId) {
+        return em.createQuery("SELECT content.downloadCount FROM Content content WHERE content.contentId =: contentId", Integer.class)
+                .setParameter("contentId", contentId)
+                .getSingleResult();
+    }
 }

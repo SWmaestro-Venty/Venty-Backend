@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -46,5 +47,8 @@ public class Content {
 
     @Column(name = "users_id")
     private Long usersId;
+
+    @Column(name = "download_count")
+    private Integer downloadCount;
 
 }

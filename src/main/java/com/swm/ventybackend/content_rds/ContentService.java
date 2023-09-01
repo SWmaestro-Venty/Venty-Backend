@@ -115,4 +115,8 @@ public class ContentService {
     public List<Content> getTenContents() {
         return contentRepository.getTenContents();
     }
+
+    public Integer getDownloadCountByContentId(Long contentId) {
+        return contentRepository.getDownloadCountByContentId(contentId);
+    }
 }

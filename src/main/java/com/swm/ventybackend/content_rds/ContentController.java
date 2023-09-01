@@ -35,6 +35,7 @@ public class ContentController {
             content.setExtension(extension);
             content.setSize(size);
             content.setUsersId(usersId);
+            content.setDownloadCount(0);
 
             if (status != null) content.setStatus(status);
 
@@ -66,5 +67,13 @@ public class ContentController {
     public List<Content> getTenRandomContents() {
         return contentService.getTenContents();
     }
+
+    @GetMapping("/getDownloadCountByContentId")
+    public Integer getDowloadCountByContentId(@RequestParam Long contentId) {
+        return contentService.getDownloadCountByContentId(contentId);
+    }
+
+    // @TODO : 다운로드 기능을 추가 할 건지? , 일단 카운트만 구현
+
 }
 
