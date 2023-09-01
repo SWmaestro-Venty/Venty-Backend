@@ -32,4 +32,10 @@ public class ClubRepository {
         return em.createQuery("SELECT club FROM Club club", Club.class)
                 .getResultList();
     }
+
+    public Club updateThumbnail(Long clubId, String thumbnailUrl) {
+        Club club = em.find(Club.class, clubId);
+        club.setThumbnailImageUrl(thumbnailUrl);
+        return club;
+    }
 }
