@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -57,7 +59,7 @@ public class UsersController {
     }
 
     @GetMapping("/findByEmail")
-    public Object findByEmail(@RequestParam String email) {
+    public Optional<Users> findByEmail(@RequestParam String email) {
         return usersService.findUsersByEmail(email);
     }
 
@@ -69,11 +71,16 @@ public class UsersController {
     // @TODO : email로 password만 받아오기 / Users 객체 말고
     @GetMapping("/passwordTest")
     public Object passwordTest(@RequestParam String email, String password) {
-        Users users = usersService.findUsersByEmail(email);
-        if(users.checkPassword(password, passwordEncoder)) {
-            return "패스워드가 동일합니다.";
+        Optional<Users> users = usersService.findUsersByEmail(email);
+
+        if (users.isPresent()) {
+            if (users.get().checkPassword(password, passwordEncoder)) {
+                return "패스워드가 동일합니다.";
+            }
+            return "패스워드가 다릅니다.";
         }
-        return "패스워드가 다릅니다";
+        return "이메일에 해당하는 유저가 존재하지 않습니다.";
+
     }
 
     @GetMapping("/kakao")

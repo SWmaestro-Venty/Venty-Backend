@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,7 +34,7 @@ public class UsersService {
         return usersRepository.findByName(name);
     }
 
-    public Users findUsersByEmail(String email) { return usersRepository.findByEmail(email); }
+    public Optional<Users> findUsersByEmail(String email) { return usersRepository.findByEmail(email); }
 
     public List<Users> findAllUsers() {
         return usersRepository.findAll();
