@@ -1,5 +1,7 @@
 package com.swm.ventybackend.users;
 
+import com.swm.ventybackend.cloud.Cloud;
+import com.swm.ventybackend.cloud.CloudService;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
 
     private final UsersService usersService;
+    private final CloudService cloudService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -29,7 +32,12 @@ public class UsersController {
         users.setNickName(nickname);
         users.setStatus(status);
         Long usersId = usersService.saveUser(users);
-        return usersId + "번 유저 등록 완료";
+
+        Cloud cloud = new Cloud();
+        cloud.setUsersId(usersId);
+        Long cloudId = cloudService.saveCloud(cloud);
+
+        return usersId + "번 유저 " + cloudId + "번 클라우드 등록 완료";
     }
 
     @DeleteMapping("/delete")
@@ -66,5 +74,11 @@ public class UsersController {
             return "패스워드가 동일합니다.";
         }
         return "패스워드가 다릅니다";
+    }
+
+    @GetMapping("/kakao")
+    public String kakaoCallback(@RequestParam String code) {
+        String response = "카카오 로그인 API 코드를 불러오는데에 성공하였습니다. " + code;
+        return response;
     }
 }
