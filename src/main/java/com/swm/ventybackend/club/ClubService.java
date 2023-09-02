@@ -1,5 +1,6 @@
 package com.swm.ventybackend.club;
 
+import com.swm.ventybackend.content_rds.ContentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.List;
 public class ClubService {
 
     private final ClubRepository clubRepository;
+    private final ContentRepository contentRepository;
 
     public Long saveClub(Club club) {
         clubRepository.save(club);
@@ -25,6 +27,11 @@ public class ClubService {
     public Club findClubByName(String name) { return clubRepository.findByName(name); }
 
     public List<Club> findAllClub() { return clubRepository.findAll(); }
+
+    public Club setClubThumbnailByContentId(Long clubId, Long contentId) {
+        String thumbnailUrl = contentRepository.findById(contentId).getThumbnailUrl();
+        return clubRepository.updateThumbnail(clubId, thumbnailUrl);
+    }
 
 
 }

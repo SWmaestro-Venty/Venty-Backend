@@ -43,4 +43,10 @@ public class ClubController {
     public String readAll() {
         return clubService.findAllClub().toString();
     }
+
+    @GetMapping("/setClubThumbnailByContentId")
+    public String setClubThumbnailByContentId(@RequestParam Long clubId, Long contentId) {
+        clubService.setClubThumbnailByContentId(clubId, contentId);
+        return clubId + "번 클럽의 썸네일 변경 완료 : " + contentId + "번 콘텐츠의 썸네일";
+    }
 }
