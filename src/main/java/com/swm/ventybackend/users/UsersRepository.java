@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -31,10 +32,11 @@ public class UsersRepository {
                 .getSingleResult();
     }
 
-    public Users findByEmail(String email) {
-        return em.createQuery("SELECT users FROM Users users WHERE users.email = :email", Users.class)
+    public Optional<Users> findByEmail(String email) {
+        List<Users> users = em.createQuery("SELECT users FROM Users users WHERE users.email = :email", Users.class)
                 .setParameter("email", email)
-                .getSingleResult();
+                .getResultList();
+        return users.stream().findAny();
     }
 
     public List<Users> findAll() {

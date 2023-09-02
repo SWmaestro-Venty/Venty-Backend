@@ -1,11 +1,9 @@
 package com.swm.ventybackend.config.auth.kakao;
 
+import com.amazonaws.Response;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -20,12 +18,14 @@ public class KakaoOAuth {
     @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String REDIRECT_URI;
 
+    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+    private String CLIENT_SECRET_KEY;
+
     public KakaoUser getKakaoUser(String code) {
         // TEST
         System.out.println("code = " + code);
         String accessToken = getKakaoAccessToken(code);
         KakaoUser kakaoUser = getKakaoUserByToken(accessToken);
-
         return kakaoUser;
     }
 
@@ -36,6 +36,7 @@ public class KakaoOAuth {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", REST_API_KEY);
+        params.add("client_secret", CLIENT_SECRET_KEY);
         params.add("redirect_uri", REDIRECT_URI);
         params.add("code", code);
 

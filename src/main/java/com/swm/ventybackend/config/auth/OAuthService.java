@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -30,19 +31,21 @@ public class OAuthService {
         String userName = kakaoUser.getName();
 
         // ID로 조회
+
         Users users = usersService.findUsersById(userId);
         if (users == null) {
 
             // Email로 조회
-            users = usersService.findUsersByEmail(email);
+            Optional<Users> users2 = usersService.findUsersByEmail(email);
 
-            // 그럼에도 없으면 (신규)
-            if (users == null) {
-                users = new Users();
-                users.setUsersId(userId);
-                users.setEmail(email);
-                users.setUsersName(userName);
-                usersService.saveUser(users);
+            if (users2.isEmpty()) {
+                Users users3 = new Users();
+//                users3.setUsersId(userId);
+                users3.setNickName(userId.toString()); // 에러 때문에 일단 nickname에 저장
+                users3.setEmail(email);
+                users3.setUsersName(userName);
+                users3.setPassword("dlatlfhsjgdjensmsvotmdnjem");
+                usersService.saveUser(users3);
             }
 
             try {
