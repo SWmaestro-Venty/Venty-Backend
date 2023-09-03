@@ -1,6 +1,7 @@
 package com.swm.ventybackend.tagMap;
 
 
+import com.swm.ventybackend.content_rds.Content;
 import com.swm.ventybackend.tag.TagService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -52,4 +53,9 @@ public class TagMapController {
     public List<TagMap> readAll() {
         return tagMapService.findAllTagMap();
     }
+
+//    @GetMapping("/findContentByManyTagId")
+//    public List<Content> findContentByManyTagName(@RequestParam List<String> tagNameList) {
+//        return tagMapService.findContentByManyTagName(tagNameList);;
+//    }
 }

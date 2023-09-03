@@ -31,38 +31,41 @@ public class OAuthService {
         String userName = kakaoUser.getName();
 
         // ID로 조회
-
         Users users = usersService.findUsersById(userId);
+
+        // 1차 ID로 조회되지 않은 유저
         if (users == null) {
 
-            // Email로 조회
+            // 2차 Email로 조회
             Optional<Users> users2 = usersService.findUsersByEmail(email);
 
+            // 신규 유저일 경우
             if (users2.isEmpty()) {
-                Users users3 = new Users();
-//                users3.setUsersId(userId);
-                users3.setNickName(userId.toString()); // 에러 때문에 일단 nickname에 저장
-                users3.setEmail(email);
-                users3.setUsersName(userName);
-                users3.setPassword("dlatlfhsjgdjensmsvotmdnjem");
-                usersService.saveUser(users3);
-            }
+                users = new Users();
+                users.setEmail(email);
+                users.setUsersName(userName);
+                users.setPassword("dlatlfhsjgdjensmsvotmdnjem"); // 임의의 패스워드 지정
 
-            try {
-                Long kakaoId = usersService.findUsersById(userId).getUsersId();
-                String jwt = jwtService.createJwt(userId);
-                return new PostLogInRes(kakaoId, jwt);
-            } catch (Exception ingored) {
-                throw new BaseException(BaseResponseStatus.PASSWORD_ENCRYPTION_ERROR);
+                // TODO : JPQL, EntityManager (영속성 컨테이너) 등 공부
+                // TODO : 기본 정보 외 선택 정보 저장 단계를 추가해야함.
+
+                // 1차적인 DB 유저 생성
+                usersService.saveUser(users);
+
+                // 생성된 DB 유저를 kakao 유저로 전환
+                usersService.updateUsersToKakaoUsers(userId, email);
             }
         }
-        /*
-        1. userId로 유저 조회
-        2. 없으면 userEmail로 유저 조회
-        3. 없으면 user 생성, kakaoId 생성
-        4. 이후 jwt token 생성
-         */
-        return null;
+
+        // JWT 토큰 발급 단계
+        try {
+//            Long kakaoId = usersService.findUsersById(userId).getUsersId();
+            String jwt = jwtService.createJwt(userId);
+            return new PostLogInRes(userId, jwt);
+//            return new PostLogInRes(kakaoId, jwt);
+        } catch (Exception ignored) {
+            throw new BaseException(BaseResponseStatus.PASSWORD_ENCRYPTION_ERROR);
+        }
     }
 
     public void logout(String code) throws BaseException {

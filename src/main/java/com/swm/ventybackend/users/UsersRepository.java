@@ -43,4 +43,19 @@ public class UsersRepository {
         return em.createQuery("SELECT users FROM Users users", Users.class)
                 .getResultList();
     }
+
+//    public Users updateUsersToKakaoUsers(Long kakaoId, String email) {
+//        Users users = findByEmail(email).get();
+//        users = em.find(Users.class, users.getUsersId());
+//        users.setUsersId(kakaoId);
+//        return users;
+//    }
+
+    public void updateUsersToKakaoUsers(Long kakaoId, String email) {
+        em.createQuery("UPDATE Users users SET users.usersId = :kakaoId WHERE users.email = :email")
+                .setParameter("kakaoId", kakaoId)
+                .setParameter("email", email)
+                .executeUpdate();
+        em.clear();
+    }
 }

@@ -1,5 +1,6 @@
 package com.swm.ventybackend.tagMap;
 
+import com.swm.ventybackend.content_rds.Content;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -30,4 +31,11 @@ public class TagMapRepository {
         return em.createQuery("SELECT tagMap FROM TagMap tagMap", TagMap.class)
                 .getResultList();
     }
+
+
+    // saveTagMapByTagNameList
+
+//    public List<Content> findContentByManyTagName(List<String> tagNameList) {
+//
+//    }
 }
