@@ -40,5 +40,9 @@ public class UsersService {
         return usersRepository.findAll();
     }
 
+    public void updateUsersToKakaoUsers(Long kakaoId, String email) {
+        usersRepository.updateUsersToKakaoUsers(kakaoId, email);
+    }
+
     // @TODO : 중복 여부 검사
 }
