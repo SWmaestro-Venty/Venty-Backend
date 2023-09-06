@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/oauth/kakao")
+@RequestMapping("/oauth2/code")
 @AllArgsConstructor
 public class OAuthController {
     @Autowired
     private final OAuthService oAuthService;
 
     @ResponseBody
-    @GetMapping("")
+    @GetMapping("/kakao")
     public BaseResponse<PostLogInRes> kakaoLogIn(@RequestParam("code") String code) {
         try {
             return new BaseResponse<>(oAuthService.kakaoLogin(code));
