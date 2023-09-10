@@ -88,4 +88,26 @@ public class UsersController {
         String response = "카카오 로그인 API 코드를 불러오는데에 성공하였습니다. " + code;
         return response;
     }
+
+    @GetMapping("/getTest")
+    public String getTest(@RequestParam @Nullable String one, @Nullable String two, @Nullable String three, @Nullable String four) {
+        String result = "";
+        if (one != null) {
+            result += one + ", ";
+        }
+
+        if (two != null) {
+            result += two + ", ";
+        }
+
+        if (three != null) {
+            result += three + ", ";
+        }
+
+        if (four != null)  {
+            result += four;
+        }
+
+        return result;
+    }
 }
