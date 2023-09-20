@@ -58,16 +58,21 @@ public class UsersController {
             newUsers.setAgeRange(ageRange);
             newUsers.setEmail(email);
             newUsers.setGender(gender);
+            newUsers.setPassword("VentyKakaoTemporaryPassword-!@#!@#");
 
             Long newUsersId = usersService.saveUser(newUsers);
+            System.out.println("newUsersId = " + newUsersId);
 
             Cloud cloud = new Cloud();
             cloud.setUsersId(newUsersId);
             Long cloudId = cloudService.saveCloud(cloud);
+
+            return newUsersId + "번 Kakao 유저 " + cloudId + "번 클라우드 신규 등록 완료";
+
         }
 
         else if (users.isPresent()) {
-            Users existUsers = users.get();
+            return users.get().getUsersId() + "번 userId, " + users.get().getOAuthId() + "번 OauthId 로 KAKAO 유저 로그인";
         }
 
         // @TODO : JWT 토큰 발급
@@ -103,7 +108,7 @@ public class UsersController {
         return usersService.findAllUsers();
     }
 
-    // @TODO : email로 password만 받아오기 / Users 객체 말고
+
     @GetMapping("/passwordTest")
     public Object passwordTest(@RequestParam String email, String password) {
         Optional<Users> users = usersService.findUsersByEmail(email);
@@ -118,33 +123,11 @@ public class UsersController {
 
     }
 
-    @GetMapping("/kakao")
-    public String kakaoCallback(@RequestParam String code) {
-        String response = "카카오 로그인 API 코드를 불러오는데에 성공하였습니다. " + code;
-        return response;
-    }
-
-    @GetMapping("/getTest")
-    public String getTest(@RequestParam @Nullable String one, @Nullable String two, @Nullable String three, @Nullable String four) {
-        String result = "";
-        if (one != null) {
-            result += one + ", ";
-        }
-
-        if (two != null) {
-            result += two + ", ";
-        }
-
-        if (three != null) {
-            result += three + ", ";
-        }
-
-        if (four != null)  {
-            result += four;
-        }
-
-        return result;
-    }
+//    @GetMapping("/kakao")
+//    public String kakaoCallback(@RequestParam String code) {
+//        String response = "카카오 로그인 API 코드를 불러오는데에 성공하였습니다. " + code;
+//        return response;
+//    }
 
     @GetMapping("/updateUsersInfoByUsersId")
     public String updateUsersInfoByUsersId(@RequestParam Long usersId, String nickname, String profileImageUrl) {
