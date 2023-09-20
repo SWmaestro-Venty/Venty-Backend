@@ -36,6 +36,10 @@ public class UsersService {
 
     public Optional<Users> findUsersByEmail(String email) { return usersRepository.findByEmail(email); }
 
+    public Optional<Users> findUsersByOAuthIdAndType(Long oAuthId, String oAuthType) {
+        return usersRepository.findUsersByOAuthIdAndType(oAuthId, oAuthType);
+    }
+
     public List<Users> findAllUsers() {
         return usersRepository.findAll();
     }
@@ -44,5 +48,10 @@ public class UsersService {
         usersRepository.updateUsersToKakaoUsers(kakaoId, email);
     }
 
-    // @TODO : 중복 여부 검사
+    // @TODO : 중복 여부 검사 API
+    // public void checkExistsUsers()
+
+    public void updateUsersInfoByUsersId(Long usersId, String nickname, String profileImageUrl) {
+        usersRepository.updateUsersInfoByUsersId(usersId, nickname, profileImageUrl);
+    }
 }

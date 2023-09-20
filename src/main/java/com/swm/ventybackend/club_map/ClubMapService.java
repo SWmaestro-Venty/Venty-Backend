@@ -32,4 +32,8 @@ public class ClubMapService {
     public List<ClubMap> findAllClubMap() {
         return clubMapRepository.findAll();
     }
+
+    public Long getClubMapCountByClubId(Long clubId) {
+        return clubMapRepository.getClubMapCountByClubId(clubId);
+    }
 }

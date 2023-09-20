@@ -29,7 +29,7 @@ public class Users {
     private String usersName;
 
     @Column(name = "gender")
-    private Integer gender;
+    private String gender;
 
     @Column(name = "nickname")
     private String nickName;
@@ -46,9 +46,19 @@ public class Users {
     @ColumnDefault("null")
     private Timestamp deletedDate;
 
-    @Column(name = "profile_image")
+    @Column(name = "profile_image_url")
     @ColumnDefault("null")
-    private String profileImage;
+    private String profileImageUrl;
+
+    @Column(name = "oauth_type")
+    private String oAuthType;
+
+    @Column(name = "oauth_id")
+    private Long oAuthId;
+
+    @Column(name = "age_range")
+    private String ageRange;
+
 
     public Users hashPassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);

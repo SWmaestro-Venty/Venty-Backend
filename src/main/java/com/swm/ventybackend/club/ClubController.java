@@ -3,7 +3,9 @@ package com.swm.ventybackend.club;
 
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/club")
@@ -31,12 +33,16 @@ public class ClubController {
     }
 
     @GetMapping("/findByIdOrName")
-    public String read(@RequestParam @Nullable Long id, String name) {
-        if(id != null) {
-            return clubService.findClubById(id).toString();
-        } else {
-            return clubService.findClubByName(name).toString();
+    public Club read(@RequestParam @Nullable Long id, @Nullable String name) {
+        if (id != null) {
+            return clubService.findClubById(id);
         }
+
+        else if (name != null) {
+            return clubService.findClubByName(name);
+        }
+
+        return null;
     }
 
     @GetMapping("/all")
