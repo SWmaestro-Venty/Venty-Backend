@@ -41,4 +41,8 @@ public class CollectionService {
         return collectionRepository.updateThumbnail(collectionId, thumbnailUrl);
     }
 
+    public List<Collection> findTenRandomCollectionByClubId(Long clubId) {
+        return collectionRepository.findTenRandomCollectionByClubId(clubId);
+    }
+
 }

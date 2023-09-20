@@ -65,4 +65,9 @@ public class CollectionController {
         collectionService.setCollectionThumbnailByContentId(collectionId, contentId);
         return collectionId + "번 컬렉션의 썸네일 변경 완료 : " + contentId + "번 콘텐츠의 썸네일";
     }
+
+    @GetMapping("/findTenRandomCollectionByClubId")
+    public List<Collection> findTenRandomCollectionByClubId(@RequestParam Long clubId) {
+        return collectionService.findTenRandomCollectionByClubId(clubId);
+    }
 }
