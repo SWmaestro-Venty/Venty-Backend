@@ -53,4 +53,9 @@ public class ClubMapController {
     public List<ClubMap> findClubMapAll() {
         return clubMapService.findAllClubMap();
     }
+
+    @GetMapping("/getClubMapCountByClubId")
+    public Long getClubMapCountByClubId(Long clubId) {
+        return clubMapService.getClubMapCountByClubId(clubId);
+    }
 }

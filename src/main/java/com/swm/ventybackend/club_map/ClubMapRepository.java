@@ -5,6 +5,8 @@ import com.swm.ventybackend.club.Club;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,5 +39,11 @@ public class ClubMapRepository {
     public List<ClubMap> findAll() {
         return em.createQuery("SELECT clubMap FROM ClubMap clubMap", ClubMap.class)
                 .getResultList();
+    }
+
+    public Long getClubMapCountByClubId(Long clubId) {
+        return (Long) em.createQuery("SELECT COUNT(clubMap) FROM ClubMap clubMap WHERE clubMap.clubId =: clubId")
+                .setParameter("clubId", clubId)
+                .getSingleResult();
     }
 }
