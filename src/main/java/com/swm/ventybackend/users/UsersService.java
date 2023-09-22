@@ -48,10 +48,11 @@ public class UsersService {
         usersRepository.updateUsersToKakaoUsers(kakaoId, email);
     }
 
-    // @TODO : 중복 여부 검사 API
-    // public void checkExistsUsers()
+    public void updateUsersNicknameByUsersId(Long usersId, String nickname) {
+        usersRepository.updateUsersNicknameByUsersId(usersId, nickname);
+    }
 
-    public void updateUsersInfoByUsersId(Long usersId, String nickname, String profileImageUrl) {
-        usersRepository.updateUsersInfoByUsersId(usersId, nickname, profileImageUrl);
+    public void updateUsersProfileImageUrl(Long usersId, String profileImageUrl) {
+        usersRepository.updateUsersProfileImageUrlByUsersId(usersId, profileImageUrl);
     }
 }

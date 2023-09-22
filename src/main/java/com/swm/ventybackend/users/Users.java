@@ -47,7 +47,6 @@ public class Users {
     private Timestamp deletedDate;
 
     @Column(name = "profile_image_url")
-    @ColumnDefault("null")
     private String profileImageUrl;
 
     @Column(name = "oauth_type")
