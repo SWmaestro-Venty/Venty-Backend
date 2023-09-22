@@ -19,6 +19,6 @@ public class VentyBackendApplication {
 
 	@GetMapping
 	public String helloWorld() {
-		return "23.08.29 Ver.";
+		return "23.09.22 Ver.";
 	}
 }
