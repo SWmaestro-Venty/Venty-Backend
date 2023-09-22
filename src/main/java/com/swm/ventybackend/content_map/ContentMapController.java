@@ -3,7 +3,9 @@ package com.swm.ventybackend.content_map;
 import com.swm.ventybackend.content_rds.Content;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -16,20 +18,19 @@ public class ContentMapController {
 
     @PostMapping("/create")
     public String create(@RequestParam Long contentId, @Nullable Long collectionId, @Nullable Long feedId) {
-        // @TODO : 두개 다 입력 못받을 때는?
-        // @TODO : collection, feed 존재 여부
+        if (collectionId == null && feedId == null)
+            return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Collection, Feed Both Data is Null").getMessage();
+
         ContentMap contentMap = new ContentMap();
         contentMap.setContentId(contentId);
 
         if (collectionId != null)
             contentMap.setCollectionId(collectionId);
-
-        if (feedId != null)
+        else
             contentMap.setFeedId(feedId);
 
         Long contentMapId = contentMapService.saveContentMap(contentMap);
-
-        return contentMapId + "번 맵 생성 완료";
+        return contentMapId.toString();
     }
 
     @DeleteMapping("/delete")

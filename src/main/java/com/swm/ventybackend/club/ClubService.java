@@ -33,5 +33,8 @@ public class ClubService {
         return clubRepository.updateThumbnail(clubId, thumbnailUrl);
     }
 
+    public void updateClubThumbnailImageUrlByClubId(Long clubId, String thumbnailImageUrl) {
+        clubRepository.updateClubThumbnailImageUrlByClubId(clubId, thumbnailImageUrl);
+    }
 
 }

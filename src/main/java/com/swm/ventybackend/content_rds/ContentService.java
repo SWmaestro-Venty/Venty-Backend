@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.swm.ventybackend.config.BaseException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
@@ -87,17 +88,49 @@ public class ContentService {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
             }
 
-
-//            23.08.24 S3 Direct -> CDN (CloudFront) 도입
-//            fileNameList.add(contentUrl + fileName);
-//            fileNameList.add(thumbnailUrl + fileName);
-
-            // CDN
             fileNameList.add(cdnDomainUrl + "contents/" + fileName);
             fileNameList.add(cdnDomainUrl + "thumbnails/thumbnails_" + fileName);
 
         });
         return fileNameList;
+    }
+
+    public String uploadThumbnailImage(MultipartFile multipartFile) {
+        String fileName = createFileName(multipartFile.getOriginalFilename());
+        String thumbnailFileName = "thumbnails_" + fileName;
+        File thumbnailFile = new File(thumbnailFileName);
+        Thumbnails.Builder builder;
+        try {
+            BufferedImage originalImage = ImageIO.read(multipartFile.getInputStream());
+            builder = Thumbnails.of(originalImage).size(400, 400);
+            builder.toFile(thumbnailFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            amazonS3.putObject(new PutObjectRequest(bucket, "profiles/" + thumbnailFileName, thumbnailFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch(Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
+        }
+
+        String resultUrl = cdnDomainUrl + "profiles/" + thumbnailFileName;
+        return resultUrl;
+    }
+
+    public String deleteFileByFileUrl(String uploadedFileUrl) {
+        String target = uploadedFileUrl.replace(cdnDomainUrl, "");
+        try {
+            boolean isObjectExist = amazonS3.doesObjectExist(bucket, target);
+            if (isObjectExist) {
+                amazonS3.deleteObject(bucket, target);
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 삭제에 실패하였습니다.");
+            }
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        return "Delete Successed";
     }
 
     private String createFileName(String fileName) {

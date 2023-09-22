@@ -2,12 +2,22 @@ package com.swm.ventybackend.users;
 
 import com.swm.ventybackend.cloud.Cloud;
 import com.swm.ventybackend.cloud.CloudService;
+import com.swm.ventybackend.config.BaseException;
+import com.swm.ventybackend.content_rds.ContentService;
+import com.swm.ventybackend.utils.JwtService;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.text.html.Option;
 import java.util.Optional;
@@ -19,68 +29,108 @@ public class UsersController {
 
     private final UsersService usersService;
     private final CloudService cloudService;
+    private final ContentService contentService;
+
+    private final JwtService jwtService;
+
+    @Value("${TEMPORARY_PASSWORD}")
+    private String temporaryPassword;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     @PostMapping("/create")
-    public String create(@RequestParam String email, String password, String users_name,
-                         String gender, String nickname, Integer status) {
-        // @TODO : profileImage File로 변경 및 API 분리
+    public LoginUsersDTO create(@RequestParam String email, String password, @Nullable String gender, @Nullable String ageRange, @Nullable Integer status) {
         Users users = new Users();
         users.setEmail(email);
         users.setPassword(password);
-        users.setUsersName(users_name);
-        users.setGender(gender);
-        users.setNickName(nickname);
-        users.setStatus(status);
+
+        if (gender != null)
+            users.setGender(gender);
+
+        if (ageRange != null)
+            users.setAgeRange(ageRange);
+
+        if (status != null)
+            users.setStatus(status);
+
         Long usersId = usersService.saveUser(users);
 
         Cloud cloud = new Cloud();
         cloud.setUsersId(usersId);
-        Long cloudId = cloudService.saveCloud(cloud);
+        cloudService.saveCloud(cloud);
 
-        return usersId + "번 유저 " + cloudId + "번 클라우드 등록 완료";
-
-        // @TODO: 디비 변동에 맞게 수정
+        LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
+        loginUsersDTO.setNewUsers(true);
+        loginUsersDTO.setUsersId(usersId);
+        loginUsersDTO.setJwtToken(jwtService.createJwt(usersId));
+        return loginUsersDTO;
     }
 
     @PostMapping("/loginKakaoUser")
-    public String loginKakaoUser(@RequestParam String kakaoId, String email, String gender, String ageRange) {
-        // 3001771464, junghk0115@naver.com, Gender.female, AgeRange.age_20_29
-
+    public LoginUsersDTO loginKakaoUser(@RequestParam String kakaoId, @Nullable String email, @Nullable String gender, @Nullable String ageRange) {
         Optional<Users> users = usersService.findUsersByOAuthIdAndType(Long.valueOf(kakaoId), "kakao");
 
         if (users.isEmpty()) {
             Users newUsers = new Users();
             newUsers.setOAuthId(Long.valueOf(kakaoId));
             newUsers.setOAuthType("kakao");
-            newUsers.setAgeRange(ageRange);
-            newUsers.setEmail(email);
-            newUsers.setGender(gender);
-            newUsers.setPassword("VentyKakaoTemporaryPassword-!@#!@#");
+
+            if (ageRange != null)
+                newUsers.setAgeRange(ageRange);
+
+            if (email != null)
+                newUsers.setEmail(email);
+
+            if (gender != null)
+                newUsers.setGender(gender);
+
+            newUsers.setPassword(temporaryPassword);
 
             Long newUsersId = usersService.saveUser(newUsers);
             System.out.println("newUsersId = " + newUsersId);
 
             Cloud cloud = new Cloud();
             cloud.setUsersId(newUsersId);
-            Long cloudId = cloudService.saveCloud(cloud);
+            cloudService.saveCloud(cloud);
 
-            return newUsersId + "번 Kakao 유저 " + cloudId + "번 클라우드 신규 등록 완료";
 
+            LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
+            loginUsersDTO.setNewUsers(true);
+            loginUsersDTO.setUsersId(newUsersId);
+
+            loginUsersDTO.setJwtToken(jwtService.createJwt(newUsersId));
+            return loginUsersDTO;
         }
 
         else if (users.isPresent()) {
-            return users.get().getUsersId() + "번 userId, " + users.get().getOAuthId() + "번 OauthId 로 KAKAO 유저 로그인";
+            LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
+            loginUsersDTO.setNewUsers(false);
+            loginUsersDTO.setUsersId(users.get().getUsersId());
+            loginUsersDTO.setJwtToken(jwtService.createJwt(users.get().getUsersId()));
+            return loginUsersDTO;
         }
 
-        // @TODO : JWT 토큰 발급
-        return null;
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "카카오 유저 로그인 에러");
     }
 
     // @TODO : 구글, 애플 로그인
-    // @TODO : 프로필 사진 및 닉네임 정하는 API
+
+    @PostMapping("/nativeLogin")
+    public LoginUsersDTO nativeLogin(String email, String password) {
+        Optional<Users> users = usersService.findUsersByEmail(email);
+
+        if (users.get().checkPassword(password, passwordEncoder)) {
+            LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
+            loginUsersDTO.setNewUsers(false);
+            loginUsersDTO.setUsersId(users.get().getUsersId());
+            loginUsersDTO.setJwtToken(jwtService.createJwt(users.get().getUsersId()));
+            return loginUsersDTO;
+        }
+
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "로그인 실패");
+    }
 
     @DeleteMapping("/delete")
     public String delete(@RequestParam Long id) {
@@ -88,19 +138,21 @@ public class UsersController {
         return id + "번 유저 삭제 완료";
     }
 
-    @GetMapping("/findByIdOrName")
-    public String read(@RequestParam Long id) {
-        return usersService.findUsersById(id).toString();
-    }
-
-    @GetMapping("/findByName")
-    public String findByName(@RequestParam String name) {
-        return usersService.findUsersByName(name).toString();
+    @GetMapping("/findUsersByUsersId")
+    public Users findUsersByUsersId(@RequestParam Long usersId) {
+        return usersService.findUsersById(usersId);
     }
 
     @GetMapping("/findByEmail")
     public Optional<Users> findByEmail(@RequestParam String email) {
         return usersService.findUsersByEmail(email);
+    }
+
+    @GetMapping("/emailExistCheck")
+    public Boolean usersEmailExistCheck (String email) {
+        if (usersService.findUsersByEmail(email).isPresent())
+            return true;
+        return false;
     }
 
     @GetMapping("/all")
@@ -109,29 +161,43 @@ public class UsersController {
     }
 
 
-    @GetMapping("/passwordTest")
+    @PostMapping("/passwordTest")
     public Object passwordTest(@RequestParam String email, String password) {
         Optional<Users> users = usersService.findUsersByEmail(email);
 
         if (users.isPresent()) {
             if (users.get().checkPassword(password, passwordEncoder)) {
-                return "패스워드가 동일합니다.";
+                return true;
             }
-            return "패스워드가 다릅니다.";
+            return false;
         }
-        return "이메일에 해당하는 유저가 존재하지 않습니다.";
-
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호가 일치하지 않습니다.");
     }
 
-//    @GetMapping("/kakao")
-//    public String kakaoCallback(@RequestParam String code) {
-//        String response = "카카오 로그인 API 코드를 불러오는데에 성공하였습니다. " + code;
-//        return response;
-//    }
-
-    @GetMapping("/updateUsersInfoByUsersId")
-    public String updateUsersInfoByUsersId(@RequestParam Long usersId, String nickname, String profileImageUrl) {
-        usersService.updateUsersInfoByUsersId(usersId, nickname, profileImageUrl);
-        return usersId + "번 유저의 정보를 변경합니다.";
+    @GetMapping("/updateUsersNicknameByUsersId")
+    public void updateUsersNicknameByUsersId(@RequestParam Long usersId, String nickname) {
+        usersService.updateUsersNicknameByUsersId(usersId, nickname);
     }
+
+    @GetMapping("/updateUsersProfileImageUrlByUsersId")
+    public void updateUsersProfileImageUrlByUsersId(@RequestParam Long usersId, String profileImageUrl) {
+        usersService.updateUsersProfileImageUrl(usersId, profileImageUrl);
+    }
+
+    @PostMapping("/updateUsersProfileImageByUsersId")
+    public String updateUsersProfileImageByUsersId(@RequestParam Long usersId, MultipartFile file) {
+        String existProfileImageUrl = usersService.findUsersById(usersId).getProfileImageUrl();
+        if (existProfileImageUrl != null) {
+            contentService.deleteFileByFileUrl(existProfileImageUrl);
+        }
+
+        String profileImageUrl = contentService.uploadThumbnailImage(file);
+        usersService.updateUsersProfileImageUrl(usersId, profileImageUrl);
+        return profileImageUrl;
+    }
+
+    // @TODO : 그룹별 프로필
+    // @TODO : 컨트리뷰터 제외
+    // @TODO : 그룹에 들어갔을때, 그룹에 있던 기존 유저인지 판별하는 API -> 신규 유저면 그룹별 프로필 생성
+
 }

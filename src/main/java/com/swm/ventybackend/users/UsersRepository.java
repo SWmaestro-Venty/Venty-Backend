@@ -67,14 +67,19 @@ public class UsersRepository {
         em.clear();
     }
 
-    // @TODO: ProfileImage 어떻게 관리?
-    public void updateUsersInfoByUsersId(Long usersId, String nickname, String profileImageUrl) {
-        em.createQuery("UPDATE Users users SET users.nickName = :nickname, users.profileImageUrl = :profileImageUrl WHERE users.usersId =: usersId")
+    public void updateUsersNicknameByUsersId(Long usersId, String nickname) {
+        em.createQuery("UPDATE Users users SET users.nickName = :nickname WHERE users.usersId = :usersId")
                 .setParameter("usersId", usersId)
                 .setParameter("nickname", nickname)
+                .executeUpdate();
+        em.clear();
+    }
+
+    public void updateUsersProfileImageUrlByUsersId(Long usersId, String profileImageUrl) {
+        em.createQuery("UPDATE Users users SET users.profileImageUrl = :profileImageUrl WHERE users.usersId = :usersId")
+                .setParameter("usersId", usersId)
                 .setParameter("profileImageUrl", profileImageUrl)
                 .executeUpdate();
         em.clear();
-
     }
 }
