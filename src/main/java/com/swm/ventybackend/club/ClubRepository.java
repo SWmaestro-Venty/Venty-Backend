@@ -38,4 +38,12 @@ public class ClubRepository {
         club.setThumbnailImageUrl(thumbnailUrl);
         return club;
     }
+
+    public void updateClubThumbnailImageUrlByClubId(Long clubId, String thumbnailImageUrl) {
+        em.createQuery("UPDATE Club club SET club.thumbnailImageUrl = :thumbnailImageUrl WHERE club.clubId = :clubId")
+                .setParameter("clubId", clubId)
+                .setParameter("thumbnailImageUrl", thumbnailImageUrl)
+                .executeUpdate();
+        em.clear();
+    }
 }
