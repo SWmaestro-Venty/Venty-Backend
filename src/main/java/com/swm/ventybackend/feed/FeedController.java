@@ -23,7 +23,7 @@ public class FeedController {
     @PostMapping("/create")
     public String create(@RequestParam String title, String context,
                          @Nullable Integer status, Long usersId, Long collectionId) {
-        // @TODO : usersId와 collectionID가 존재하는지
+        // @TODO : usersId와 collectionID 존재 여부 확인 (객체 불러오는거 말고 -> 부담 큼)
         Feed feed = new Feed();
         feed.setFeedTitle(title);
         feed.setFeedContext(context);

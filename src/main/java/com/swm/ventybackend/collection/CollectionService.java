@@ -1,10 +1,6 @@
 package com.swm.ventybackend.collection;
 
-import com.amazonaws.services.dynamodbv2.xspec.L;
-import com.swm.ventybackend.content_rds.Content;
 import com.swm.ventybackend.content_rds.ContentRepository;
-import com.swm.ventybackend.users.Users;
-import com.swm.ventybackend.users.UsersRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
