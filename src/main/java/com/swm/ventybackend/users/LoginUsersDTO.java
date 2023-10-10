@@ -1,5 +1,6 @@
 package com.swm.ventybackend.users;
 
+import com.swm.ventybackend.utils.Token;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,5 +9,5 @@ import lombok.Setter;
 public class LoginUsersDTO {
     private Long usersId;
     private boolean isNewUsers;
-    private String jwtToken;
+    private Token jwtToken;
 }
