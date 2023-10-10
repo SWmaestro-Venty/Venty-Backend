@@ -3,8 +3,12 @@ package com.swm.ventybackend.users;
 import com.swm.ventybackend.cloud.Cloud;
 import com.swm.ventybackend.cloud.CloudService;
 import com.swm.ventybackend.config.BaseException;
+import com.swm.ventybackend.config.BaseResponse;
+import com.swm.ventybackend.config.BaseResponseStatus;
 import com.swm.ventybackend.content_rds.ContentService;
 import com.swm.ventybackend.utils.JwtService;
+import com.swm.ventybackend.utils.JwtSuccessDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +43,7 @@ public class UsersController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
+    @Operation(summary = "[0] 신규 유저 생성", description = "email 중복 검사 필요, password 검증 필요, status (1 : 일반 유저 / 2 : 컨트리뷰터 / 3 : 어드민)")
     @PostMapping("/create")
     public LoginUsersDTO create(@RequestParam String email, String password, @Nullable String gender, @Nullable String ageRange, @Nullable Integer status) {
         Users users = new Users();
@@ -52,8 +56,8 @@ public class UsersController {
         if (ageRange != null)
             users.setAgeRange(ageRange);
 
-        if (status != null)
-            users.setStatus(status);
+        if (status == null) status = 1;
+        users.setStatus(status);
 
         Long usersId = usersService.saveUser(users);
 
@@ -64,10 +68,11 @@ public class UsersController {
         LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
         loginUsersDTO.setNewUsers(true);
         loginUsersDTO.setUsersId(usersId);
-        loginUsersDTO.setJwtToken(jwtService.createJwt(usersId));
+        loginUsersDTO.setJwtToken(jwtService.createAccessToken(usersId, status));
         return loginUsersDTO;
     }
 
+    @Operation(summary = "[0] 카카오 (신규/기존) 유저 로그인")
     @PostMapping("/loginKakaoUser")
     public LoginUsersDTO loginKakaoUser(@RequestParam String kakaoId, @Nullable String email, @Nullable String gender, @Nullable String ageRange) {
         Optional<Users> users = usersService.findUsersByOAuthIdAndType(Long.valueOf(kakaoId), "kakao");
@@ -99,8 +104,7 @@ public class UsersController {
             LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
             loginUsersDTO.setNewUsers(true);
             loginUsersDTO.setUsersId(newUsersId);
-
-            loginUsersDTO.setJwtToken(jwtService.createJwt(newUsersId));
+            loginUsersDTO.setJwtToken(jwtService.createAccessToken(newUsersId, newUsers.getStatus()));
             return loginUsersDTO;
         }
 
@@ -108,15 +112,16 @@ public class UsersController {
             LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
             loginUsersDTO.setNewUsers(false);
             loginUsersDTO.setUsersId(users.get().getUsersId());
-            loginUsersDTO.setJwtToken(jwtService.createJwt(users.get().getUsersId()));
+            loginUsersDTO.setJwtToken(jwtService.createAccessToken(users.get().getUsersId(), users.get().getStatus()));
             return loginUsersDTO;
         }
 
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "카카오 유저 로그인 에러");
     }
 
-    // @TODO : 구글, 애플 로그인
+    // @TODO : 구글, 애플 로그인 추가
 
+    @Operation(summary = "[0] Oauth 미사용 native 유저 로그인")
     @PostMapping("/nativeLogin")
     public LoginUsersDTO nativeLogin(String email, String password) {
         Optional<Users> users = usersService.findUsersByEmail(email);
@@ -125,29 +130,59 @@ public class UsersController {
             LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
             loginUsersDTO.setNewUsers(false);
             loginUsersDTO.setUsersId(users.get().getUsersId());
-            loginUsersDTO.setJwtToken(jwtService.createJwt(users.get().getUsersId()));
+            loginUsersDTO.setJwtToken(jwtService.createAccessToken(users.get().getUsersId(), users.get().getStatus()));
             return loginUsersDTO;
         }
 
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "로그인 실패");
     }
 
+    @Operation(summary = "[1 - 3] 유저 삭제", description = "본인 계정 혹은 어드민에 의한 유저 삭제")
     @DeleteMapping("/delete")
-    public String delete(@RequestParam Long id) {
-        usersService.removeUser(id);
-        return id + "번 유저 삭제 완료";
+    public BaseResponse<String> delete(@RequestParam Long usersId, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
+        try {
+            JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
+
+            if (jwtSuccessDTO.getUsersId().equals(usersId) || jwtSuccessDTO.getStatus().equals("3")) {
+                usersService.removeUser(usersId);
+                return new BaseResponse<String>(usersId + "번 유저 삭제 완료");
+            }
+
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "유저 삭제 에러");
     }
 
+
+    @Operation(summary = "[3] UsersId로 Users 찾기")
     @GetMapping("/findUsersByUsersId")
     public Users findUsersByUsersId(@RequestParam Long usersId) {
         return usersService.findUsersById(usersId);
     }
 
-    @GetMapping("/findByEmail")
-    public Optional<Users> findByEmail(@RequestParam String email) {
-        return usersService.findUsersByEmail(email);
+
+    @Operation(summary = "[3] Email로 Users 찾기", description = "어드민에 의한 이메일 유저 조회")
+    @GetMapping("/findUsersByEmail")
+    public BaseResponse<Optional<Users>> findUsersByEmail(@RequestParam String email, String usersId, @RequestHeader(value="X-ACCESS-TOKEN") String accessToken) throws BaseException{
+        try {
+            JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
+
+            if(jwtSuccessDTO.getStatus().equals("3")) {
+                System.out.println("jwtSuccessDTO = " + jwtSuccessDTO.getUsersId());
+                return new BaseResponse<Optional<Users>>(usersService.findUsersByEmail(email));
+            }
+
+            else {
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
     }
 
+    @Operation(summary = "[0] 이메일 존재 여부 확인")
     @GetMapping("/emailExistCheck")
     public Boolean usersEmailExistCheck (String email) {
         if (usersService.findUsersByEmail(email).isPresent())
@@ -155,14 +190,25 @@ public class UsersController {
         return false;
     }
 
+    @Operation(summary = "[3] 전체 유저 목록 확인")
     @GetMapping("/all")
-    public Object readAll() {
-        return usersService.findAllUsers();
+    public BaseResponse<Object> readAll(String userId, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
+        try {
+            JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
+
+            if(jwtSuccessDTO.getStatus().equals("3"))
+                return new BaseResponse<Object>(usersService.findAllUsers());
+
+            return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
     }
 
 
-    @PostMapping("/passwordTest")
-    public Object passwordTest(@RequestParam String email, String password) {
+    @Operation(summary = "[0] 패스워드 테스트")
+    @PostMapping("/passwordTestByEmail")
+    public Object passwordTestByEmail(@RequestParam String email, String password) {
         Optional<Users> users = usersService.findUsersByEmail(email);
 
         if (users.isPresent()) {
@@ -174,30 +220,63 @@ public class UsersController {
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호가 일치하지 않습니다.");
     }
 
+    @Operation(summary = "[1 - 3] 유저/컨트리뷰터 닉네임 변경", description = "본인 혹은 어드민에 의한 닉네임 변경")
     @GetMapping("/updateUsersNicknameByUsersId")
-    public void updateUsersNicknameByUsersId(@RequestParam Long usersId, String nickname) {
-        usersService.updateUsersNicknameByUsersId(usersId, nickname);
-    }
+    public BaseResponse<String> updateUsersNicknameByUsersId(@RequestParam Long usersId, String nickname, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
+        try {
+            JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
 
-    @GetMapping("/updateUsersProfileImageUrlByUsersId")
-    public void updateUsersProfileImageUrlByUsersId(@RequestParam Long usersId, String profileImageUrl) {
-        usersService.updateUsersProfileImageUrl(usersId, profileImageUrl);
-    }
-
-    @PostMapping("/updateUsersProfileImageByUsersId")
-    public String updateUsersProfileImageByUsersId(@RequestParam Long usersId, MultipartFile file) {
-        String existProfileImageUrl = usersService.findUsersById(usersId).getProfileImageUrl();
-        if (existProfileImageUrl != null) {
-            contentService.deleteFileByFileUrl(existProfileImageUrl);
+            if(jwtSuccessDTO.getUsersId().equals(usersId) || jwtSuccessDTO.getStatus().equals("3")) {
+                usersService.updateUsersNicknameByUsersId(usersId, nickname);
+                return new BaseResponse<String>(usersId + "번 유저 닉네임 변경 완료");
+            }
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
         }
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "유저 닉네임 업데이트 에러");
+    }
 
-        String profileImageUrl = contentService.uploadThumbnailImage(file);
-        usersService.updateUsersProfileImageUrl(usersId, profileImageUrl);
-        return profileImageUrl;
+    @Operation(summary = "[1 - 3] 유저/컨트리뷰터 프로필 이미지 경로 변경", description = "본인 혹은 어드민에 의한 프로필 이미지 변경")
+    @GetMapping("/updateUsersProfileImageUrlByUsersId")
+    public BaseResponse<String> updateUsersProfileImageUrlByUsersId(@RequestParam Long usersId, String profileImageUrl, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
+        try {
+            JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
+
+            if(jwtSuccessDTO.getUsersId().equals(usersId) || jwtSuccessDTO.getStatus().equals("3")) {
+                usersService.updateUsersProfileImageUrl(usersId, profileImageUrl);
+                return new BaseResponse<String>(usersId + "번 유저 프로필 이미지 경로 변경 완료");
+            }
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "유저 프로필 이미지 경로 업데이트 에러");
+    }
+
+    @Operation(summary = "[1 - 3] 유저/컨트리뷰터 프로필 이미지 변경", description = "본인 혹은 어드민에 의한 프로필 이미지 변경")
+    @PostMapping("/updateUsersProfileImageByUsersId")
+    public BaseResponse<String> updateUsersProfileImageByUsersId(@RequestParam Long usersId, MultipartFile file, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
+        try {
+            JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
+
+            if(jwtSuccessDTO.getUsersId().equals(usersId) || jwtSuccessDTO.getStatus().equals("3")) {
+                String existProfileImageUrl = usersService.findUsersById(usersId).getProfileImageUrl();
+                if (existProfileImageUrl != null) {
+                    contentService.deleteFileByFileUrl(existProfileImageUrl);
+                }
+
+                String profileImageUrl = contentService.uploadThumbnailImage(file);
+                usersService.updateUsersProfileImageUrl(usersId, profileImageUrl);
+                return new BaseResponse<String>(profileImageUrl);
+            }
+        } catch(BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "유저 프로필 이미지 업데이트 에러");
     }
 
     // @TODO : 그룹별 프로필
     // @TODO : 컨트리뷰터 제외
     // @TODO : 그룹에 들어갔을때, 그룹에 있던 기존 유저인지 판별하는 API -> 신규 유저면 그룹별 프로필 생성
+    // @TODO : 아직 본인이 아닌 타인일 때 구분하는 로직이 없음. (231011)
 
 }

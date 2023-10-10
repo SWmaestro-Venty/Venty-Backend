@@ -34,9 +34,8 @@ public class Users {
     @Column(name = "nickname")
     private String nickName;
 
-    @ColumnDefault("1")
     @Column(name = "status")
-    private Integer status;
+    private Integer status = 1;
 
     @CreationTimestamp
     @Column(name = "created_date")
@@ -57,7 +56,6 @@ public class Users {
 
     @Column(name = "age_range")
     private String ageRange;
-
 
     public Users hashPassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
