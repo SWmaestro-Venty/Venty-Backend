@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class Token {
     private String grantType;
     private String accessToken;
-    private String refershToken;
+    private String refreshToken;
     private Long key;
 }
