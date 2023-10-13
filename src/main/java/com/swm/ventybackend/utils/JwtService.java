@@ -60,7 +60,7 @@ public class JwtService {
 
         return com.swm.ventybackend.utils.Token.builder()
                 .accessToken(accessToken)
-                .refershToken(refreshToken)
+                .refreshToken(refreshToken)
                 .key(userId)
                 .build();
     }

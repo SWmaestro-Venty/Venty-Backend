@@ -143,7 +143,7 @@ public class UsersController {
         try {
             JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
 
-            if (jwtSuccessDTO.getUsersId().equals(usersId) || jwtSuccessDTO.getStatus().equals("3")) {
+            if (jwtSuccessDTO.getUsersId().equals(usersId.toString()) || jwtSuccessDTO.getStatus().equals("3")) {
                 usersService.removeUser(usersId);
                 return new BaseResponse<String>(usersId + "번 유저 삭제 완료");
             }
@@ -164,7 +164,7 @@ public class UsersController {
 
     @Operation(summary = "[3] Email로 Users 찾기", description = "어드민에 의한 이메일 유저 조회")
     @GetMapping("/findUsersByEmail")
-    public BaseResponse<Optional<Users>> findUsersByEmail(@RequestParam String email, String usersId, @RequestHeader(value="X-ACCESS-TOKEN") String accessToken) throws BaseException{
+    public BaseResponse<Optional<Users>> findUsersByEmail(@RequestParam String email, @RequestHeader(value="X-ACCESS-TOKEN") String accessToken) throws BaseException{
         try {
             JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
 
@@ -192,7 +192,7 @@ public class UsersController {
 
     @Operation(summary = "[3] 전체 유저 목록 확인")
     @GetMapping("/all")
-    public BaseResponse<Object> readAll(String userId, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
+    public BaseResponse<Object> readAll(@RequestHeader(value = "X-ACCESS-TOKEN") @RequestParam String accessToken) throws BaseException {
         try {
             JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
 
@@ -226,7 +226,7 @@ public class UsersController {
         try {
             JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
 
-            if(jwtSuccessDTO.getUsersId().equals(usersId) || jwtSuccessDTO.getStatus().equals("3")) {
+            if(jwtSuccessDTO.getUsersId().equals(usersId.toString()) || jwtSuccessDTO.getStatus().equals("3")) {
                 usersService.updateUsersNicknameByUsersId(usersId, nickname);
                 return new BaseResponse<String>(usersId + "번 유저 닉네임 변경 완료");
             }
@@ -242,7 +242,7 @@ public class UsersController {
         try {
             JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
 
-            if(jwtSuccessDTO.getUsersId().equals(usersId) || jwtSuccessDTO.getStatus().equals("3")) {
+            if(jwtSuccessDTO.getUsersId().equals(usersId.toString()) || jwtSuccessDTO.getStatus().equals("3")) {
                 usersService.updateUsersProfileImageUrl(usersId, profileImageUrl);
                 return new BaseResponse<String>(usersId + "번 유저 프로필 이미지 경로 변경 완료");
             }
@@ -258,7 +258,7 @@ public class UsersController {
         try {
             JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
 
-            if(jwtSuccessDTO.getUsersId().equals(usersId) || jwtSuccessDTO.getStatus().equals("3")) {
+            if(jwtSuccessDTO.getUsersId().equals(usersId.toString()) || jwtSuccessDTO.getStatus().equals("3")) {
                 String existProfileImageUrl = usersService.findUsersById(usersId).getProfileImageUrl();
                 if (existProfileImageUrl != null) {
                     contentService.deleteFileByFileUrl(existProfileImageUrl);
@@ -278,5 +278,6 @@ public class UsersController {
     // @TODO : 컨트리뷰터 제외
     // @TODO : 그룹에 들어갔을때, 그룹에 있던 기존 유저인지 판별하는 API -> 신규 유저면 그룹별 프로필 생성
     // @TODO : 아직 본인이 아닌 타인일 때 구분하는 로직이 없음. (231011)
+    // @TODO : REFRESH TOKEN 관리법 추가해야함 (231011)
 
 }
