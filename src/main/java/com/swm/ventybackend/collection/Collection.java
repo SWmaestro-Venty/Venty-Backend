@@ -43,4 +43,6 @@ public class Collection {
     @Column(name = "users_id")
     private Long usersId;
 
+    @Column(name = "collection_description")
+    private String collectionDescription;
 }

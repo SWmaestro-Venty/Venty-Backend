@@ -41,4 +41,7 @@ public class CollectionService {
         return collectionRepository.findTenRandomCollectionByClubId(clubId);
     }
 
+    public List<Collection> findCollectionsByUsersIdAndClubId(Long usersId, Long clubId) {
+        return collectionRepository.findCollectionsByUsersIdAndClubId(usersId, clubId);
+    }
 }
