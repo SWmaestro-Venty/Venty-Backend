@@ -5,7 +5,9 @@ import com.swm.ventybackend.collection.Collection;
 import com.swm.ventybackend.collection.CollectionService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -19,6 +21,10 @@ public class ClubMapController {
 
     @PostMapping("/create")
     public String create(@RequestParam Long usersId, Long clubId) {
+        if (clubMapService.isUsersExistClubByUsersIdAndClubId(usersId, clubId)) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미 가입된 클럽");
+        }
+
         ClubMap clubMap = new ClubMap();
         clubMap.setClubId(clubId);
         clubMap.setUsersId(usersId);

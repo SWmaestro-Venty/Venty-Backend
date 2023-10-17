@@ -36,4 +36,8 @@ public class ClubMapService {
     public Long getClubMapCountByClubId(Long clubId) {
         return clubMapRepository.getClubMapCountByClubId(clubId);
     }
+
+    public Boolean isUsersExistClubByUsersIdAndClubId(Long usersId, Long clubId) {
+        return clubMapRepository.isUsersExistClubByUsersIdAndClubId(usersId, clubId);
+    }
 }
