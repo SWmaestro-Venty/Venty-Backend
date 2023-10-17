@@ -120,6 +120,98 @@ public class UsersController {
     }
 
     // @TODO : 구글, 애플 로그인 추가
+    @Operation(summary = "[0] 구글 (신규/기존) 유저 로그인")
+    @PostMapping("/loginGoogleUser")
+    public LoginUsersDTO loginGoogleUser(@RequestParam String googleId, @Nullable String email, @Nullable String name) {
+        Optional<Users> users = usersService.findUsersByOAuthIdAndType(Long.valueOf(googleId), "google");
+
+        if (users.isEmpty()) {
+            Users newUsers = new Users();
+            newUsers.setOAuthId(Long.valueOf(googleId));
+            newUsers.setOAuthType("google");
+
+            if (name != null)
+                newUsers.setUsersName(name);
+
+            if (email != null)
+                newUsers.setEmail(email);
+
+            newUsers.setPassword(temporaryPassword);
+
+            Long newUsersId = usersService.saveUser(newUsers);
+            System.out.println("newUsersId = " + newUsersId);
+
+            Cloud cloud = new Cloud();
+            cloud.setUsersId(newUsersId);
+            cloudService.saveCloud(cloud);
+
+
+            LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
+            loginUsersDTO.setNewUsers(true);
+            loginUsersDTO.setUsersId(newUsersId);
+            loginUsersDTO.setJwtToken(jwtService.createAccessToken(newUsersId, newUsers.getStatus()));
+            return loginUsersDTO;
+        }
+
+        else if (users.isPresent()) {
+            LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
+            loginUsersDTO.setNewUsers(false);
+            loginUsersDTO.setUsersId(users.get().getUsersId());
+            loginUsersDTO.setJwtToken(jwtService.createAccessToken(users.get().getUsersId(), users.get().getStatus()));
+            return loginUsersDTO;
+        }
+
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "구글 유저 로그인 에러");
+    }
+
+
+    @Operation(summary = "[0] 애플 (신규/기존) 유저 로그인")
+    @PostMapping("/loginAppleUser")
+    public LoginUsersDTO loginAppleUser(@RequestParam String appleId, @Nullable String email, @Nullable String name, @Nullable String authCode, @Nullable String token) {
+        Optional<Users> users = usersService.findUsersByOAuthIdAndType(Long.valueOf(appleId), "apple");
+
+        if (users.isEmpty()) {
+            Users newUsers = new Users();
+            newUsers.setOAuthId(Long.valueOf(appleId));
+            newUsers.setOAuthType("apple");
+
+            if (email != null)
+                newUsers.setEmail(email);
+
+            if (name != null)
+                newUsers.setUsersName(name);
+
+            // @TODO : authCode, token ?
+
+            newUsers.setPassword(temporaryPassword);
+
+            Long newUsersId = usersService.saveUser(newUsers);
+            System.out.println("newUsersId = " + newUsersId);
+
+            Cloud cloud = new Cloud();
+            cloud.setUsersId(newUsersId);
+            cloudService.saveCloud(cloud);
+
+
+            LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
+            loginUsersDTO.setNewUsers(true);
+            loginUsersDTO.setUsersId(newUsersId);
+            loginUsersDTO.setJwtToken(jwtService.createAccessToken(newUsersId, newUsers.getStatus()));
+            return loginUsersDTO;
+        }
+
+        else if (users.isPresent()) {
+            LoginUsersDTO loginUsersDTO = new LoginUsersDTO();
+            loginUsersDTO.setNewUsers(false);
+            loginUsersDTO.setUsersId(users.get().getUsersId());
+            loginUsersDTO.setJwtToken(jwtService.createAccessToken(users.get().getUsersId(), users.get().getStatus()));
+            return loginUsersDTO;
+        }
+
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "애플 유저 로그인 에러");
+    }
+
+    // @TODO: OAuth 로그인 코드 정리
 
     @Operation(summary = "[0] Oauth 미사용 native 유저 로그인")
     @PostMapping("/nativeLogin")
@@ -254,7 +346,7 @@ public class UsersController {
 
     @Operation(summary = "[1 - 3] 유저/컨트리뷰터 프로필 이미지 변경", description = "본인 혹은 어드민에 의한 프로필 이미지 변경")
     @PostMapping("/updateUsersProfileImageByUsersId")
-    public BaseResponse<String> updateUsersProfileImageByUsersId(@RequestParam Long usersId, MultipartFile file, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
+    public BaseResponse<String> updateUsersProfileImageByUsersId(@RequestParam Long usersId, @Nullable MultipartFile file, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
         try {
             JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
 
