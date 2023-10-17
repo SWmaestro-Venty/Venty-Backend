@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/club")
 @RequiredArgsConstructor
@@ -45,9 +47,9 @@ public class ClubController {
         return null;
     }
 
-    @GetMapping("/all")
-    public String readAll() {
-        return clubService.findAllClub().toString();
+    @GetMapping("/findAllClubs")
+    public List<Club> findAllClubs() {
+        return clubService.findAllClubs();
     }
 
     @GetMapping("/setClubThumbnailByContentId")

@@ -26,7 +26,7 @@ public class ClubService {
 
     public Club findClubByName(String name) { return clubRepository.findByName(name); }
 
-    public List<Club> findAllClub() { return clubRepository.findAll(); }
+    public List<Club> findAllClubs() { return clubRepository.findAllClubs(); }
 
     public Club setClubThumbnailByContentId(Long clubId, Long contentId) {
         String thumbnailUrl = contentRepository.findById(contentId).getThumbnailUrl();

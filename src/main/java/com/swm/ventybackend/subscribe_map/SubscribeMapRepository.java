@@ -24,4 +24,10 @@ public class SubscribeMapRepository {
         return em.createQuery("SELECT subScribeMap FROM SubscribeMap subScribeMap", SubscribeMap.class)
                 .getResultList();
     }
+
+    public List<SubscribeMap> findSubscribeMapsByUsersId(Long usersId) {
+        return em.createQuery("SELECT subScribeMap FROM SubscribeMap subScribeMap WHERE subScribeMap.usersId =: usersId", SubscribeMap.class)
+                .setParameter("usersId", usersId)
+                .getResultList();
+    }
 }

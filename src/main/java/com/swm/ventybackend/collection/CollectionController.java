@@ -22,15 +22,21 @@ public class CollectionController {
 
 
     @PostMapping("/create")
-    public String create(@RequestParam String name, Long clubId, Long usersId, @Nullable Integer status, @Nullable String thumbnailImageUrl) {
+    public String create(@RequestParam String name, Long clubId, Long usersId, @Nullable Integer status, @Nullable String thumbnailImageUrl, @Nullable String collectionDescription) {
 
         Collection collection = new Collection();
         collection.setCollectionName(name);
         collection.setClubId(clubId);
         collection.setUsersId(usersId);
-        collection.setThumbnailImageUrl(thumbnailImageUrl);
 
-        if (status != null) collection.setStatus(status);
+        if (thumbnailImageUrl != null)
+            collection.setThumbnailImageUrl(thumbnailImageUrl);
+
+        if (collectionDescription != null)
+            collection.setCollectionDescription(collectionDescription);
+
+        if (status != null)
+            collection.setStatus(status);
 
         Long collectionId = collectionService.saveCollection(collection);
 
@@ -44,7 +50,7 @@ public class CollectionController {
     }
 
     @GetMapping("/findByIdOrName")
-    public String read(@RequestParam @Nullable Long id, String name) {
+    public String read(@RequestParam @Nullable Long id, @Nullable String name) {
         if(id != null) {
             return collectionService.findCollectionById(id).toString();
         } else {
@@ -69,5 +75,10 @@ public class CollectionController {
     @GetMapping("/findTenRandomCollectionByClubId")
     public List<Collection> findTenRandomCollectionByClubId(@RequestParam Long clubId) {
         return collectionService.findTenRandomCollectionByClubId(clubId);
+    }
+
+    @GetMapping("/findCollectionsByUsersIdAndClubId")
+    public List<Collection> findCollectionsByUsersIdAndClubId(@RequestParam Long usersId, Long clubId) {
+        return collectionService.findCollectionsByUsersIdAndClubId(usersId, clubId);
     }
 }

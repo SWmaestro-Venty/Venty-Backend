@@ -24,6 +24,9 @@ public class PrivateClubDetail {
     @Column(name = "private_club_max_users")
     private Integer privateClubMaxUsers;
 
+    @Column(name = "private_club_description")
+    private String privateClubDescription;
+
     @Column(name = "users_id")
     private Long usersId;
 

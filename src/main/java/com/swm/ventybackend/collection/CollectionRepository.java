@@ -51,4 +51,11 @@ public class CollectionRepository {
                 .setMaxResults(10)
                 .getResultList();
     }
+
+    public List<Collection> findCollectionsByUsersIdAndClubId(Long usersId, Long clubId) {
+        return em.createQuery("SELECT collection FROM Collection collection WHERE collection.usersId =: usersId AND collection.clubId =: clubId", Collection.class)
+                .setParameter("usersId", usersId)
+                .setParameter("clubId", clubId)
+                .getResultList();
+    }
 }

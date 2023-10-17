@@ -46,4 +46,17 @@ public class ClubMapRepository {
                 .setParameter("clubId", clubId)
                 .getSingleResult();
     }
+
+    public Boolean isUsersExistClubByUsersIdAndClubId(Long usersId, Long clubId) {
+        List<ClubMap> clubMaps = em.createQuery("SELECT clubMap FROM ClubMap clubMap WHERE clubMap.usersId =: usersId AND clubMap.clubId =: clubId", ClubMap.class)
+                .setParameter("usersId", usersId)
+                .setParameter("clubId", clubId)
+                .getResultList();
+
+        if (clubMaps.isEmpty())
+            return false; // 중복 검사 통과
+
+        return true;
+
+    }
 }

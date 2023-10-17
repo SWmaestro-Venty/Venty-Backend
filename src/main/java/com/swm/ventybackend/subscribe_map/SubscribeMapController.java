@@ -41,4 +41,9 @@ public class SubscribeMapController {
         return subscribeMapService.findAllSubscribeMap();
     }
 
+    @GetMapping("/findSubScribeMapsByUsersId")
+    public List<SubscribeMap> findSubScribeMapsByUsersId(@RequestParam Long usersId) {
+        return subscribeMapService.findSubscribeMapsByUsersId(usersId);
+    }
+
 }
