@@ -32,6 +32,12 @@ public class TagMapRepository {
                 .getResultList();
     }
 
+    public List<TagMap> findTagMapsByContentId(Long contentId) {
+        return em.createQuery("SELECT tagMap FROM TagMap tagMap WHERE tagMap.contentId =: contentId", TagMap.class)
+                .setParameter("contentId", contentId)
+                .getResultList();
+    }
+
 
     // saveTagMapByTagNameList
 

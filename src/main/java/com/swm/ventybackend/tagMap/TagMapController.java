@@ -54,6 +54,11 @@ public class TagMapController {
         return tagMapService.findAllTagMap();
     }
 
+    @GetMapping("/findTagMapsByContentId")
+    public List<TagMap> findTagMapsByContentId(@RequestParam Long contentId) {
+        return tagMapService.findTagMapsByContentId(contentId);
+    }
+
 //    @GetMapping("/findContentByManyTagId")
 //    public List<Content> findContentByManyTagName(@RequestParam List<String> tagNameList) {
 //        return tagMapService.findContentByManyTagName(tagNameList);;
