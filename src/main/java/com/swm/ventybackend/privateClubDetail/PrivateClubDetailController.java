@@ -2,6 +2,7 @@ package com.swm.ventybackend.privateClubDetail;
 
 
 
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +23,17 @@ public class PrivateClubDetailController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/create")
-    public String create(@RequestParam String password, Integer maxUsers, Long usersId, Long clubId) {
+    public String create(@RequestParam @Nullable String password, Integer maxUsers, Long usersId, Long clubId, @Nullable String description) {
         PrivateClubDetail privateClubDetail = new PrivateClubDetail();
-        privateClubDetail.setPrivateClubPassword(password);
         privateClubDetail.setPrivateClubMaxUsers(maxUsers);
         privateClubDetail.setUsersId(usersId);
         privateClubDetail.setClubId(clubId);
+
+        if (password != null)
+            privateClubDetail.setPrivateClubPassword(password);
+
+        if (description != null)
+            privateClubDetail.setPrivateClubDescription(description);
 
         Long privateClubDetailId = privateClubDetailService.savePrivateClubDetail(privateClubDetail);
         return privateClubDetailId.toString();
