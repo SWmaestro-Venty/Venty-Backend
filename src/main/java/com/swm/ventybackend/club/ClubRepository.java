@@ -28,7 +28,7 @@ public class ClubRepository {
                 .getSingleResult();
     }
 
-    public List<Club> findAll() {
+    public List<Club> findAllClubs() {
         return em.createQuery("SELECT club FROM Club club", Club.class)
                 .getResultList();
     }
