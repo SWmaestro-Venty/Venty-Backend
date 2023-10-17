@@ -30,5 +30,8 @@ public class SubscribeMapService {
         return subscribeMapRepository.findAll();
     }
 
+    public List<SubscribeMap> findSubscribeMapsByUsersId(Long usersId) {
+        return subscribeMapRepository.findSubscribeMapsByUsersId(usersId);
+    }
 
 }
