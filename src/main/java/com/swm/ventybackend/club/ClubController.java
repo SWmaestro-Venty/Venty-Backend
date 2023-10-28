@@ -38,9 +38,7 @@ public class ClubController {
     public Club read(@RequestParam @Nullable Long id, @Nullable String name) {
         if (id != null) {
             return clubService.findClubById(id);
-        }
-
-        else if (name != null) {
+        } else if (name != null) {
             return clubService.findClubByName(name);
         }
 
@@ -69,4 +67,10 @@ public class ClubController {
         clubService.updateClubThumbnailImageUrlByClubId(clubId, thumbnailImageUrl);
         return thumbnailImageUrl;
     }
+
+    @GetMapping("/getCurrentClubUsersCountbyClubId")
+    public Long getCurrentClubUsersCountByClubId(@RequestParam Long clubId) {
+        return clubService.getCurrentClubUsersCountByClubId(clubId);
+    }
+
 }
