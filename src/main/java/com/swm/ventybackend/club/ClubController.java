@@ -20,12 +20,12 @@ public class ClubController {
     private final ContentService contentService;
 
     @PostMapping("/create")
-    public String create(@RequestParam Integer category, String name) {
+    public Long create(@RequestParam String category, String name) {
         Club club = new Club();
         club.setCategory(category);
         club.setClubName(name);
         Long clubId = clubService.saveClub(club);
-        return clubId + "번 그룹 등록 완료";
+        return clubId;
     }
 
     @DeleteMapping("/delete")

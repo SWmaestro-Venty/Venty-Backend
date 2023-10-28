@@ -21,7 +21,7 @@ public class Club {
     private Long clubId;
 
     @Column(name = "category")
-    private Integer category;
+    private String category;
 
     @Column(name = "club_name")
     private String clubName;
