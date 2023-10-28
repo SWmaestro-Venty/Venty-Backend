@@ -2,7 +2,9 @@ package com.swm.ventybackend.subscribe_map;
 
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -15,7 +17,9 @@ public class SubscribeMapController {
 
     @PostMapping("/create")
     public String create(@RequestParam Long usersId, Long collectionId) {
-        // @TODO collectionId를 가진 collection이 실제로 존재하는지 확인해야함.
+        if (subscribeMapService.checkExistSubscribeMapByUsersIdAndCollectionId(usersId, collectionId)) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미 존재하는 SubsscribeMap 입니다.");
+        }
         SubscribeMap subscribeMap = new SubscribeMap();
         subscribeMap.setUsersId(usersId);
         subscribeMap.setCollectionId(collectionId);

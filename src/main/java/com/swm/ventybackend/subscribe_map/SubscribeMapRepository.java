@@ -30,4 +30,18 @@ public class SubscribeMapRepository {
                 .setParameter("usersId", usersId)
                 .getResultList();
     }
+
+    public Boolean checkExistSubscribeMapByUsersIdAndCollectionId(Long usersId, Long collectionId) {
+        List<SubscribeMap> resultQuery = em.createQuery("SELECT subScribeMap FROM SubscribeMap subScribeMap WHERE subScribeMap.usersId =: usersId AND subScribeMap.collectionId =: collectionId", SubscribeMap.class)
+                .setParameter("usersId", usersId)
+                .setParameter("collectionId", collectionId)
+                .getResultList();
+
+        if (resultQuery.isEmpty())
+            return false;
+
+        else
+            return true;
+
+    }
 }
