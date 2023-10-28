@@ -45,10 +45,10 @@ public class CollectionRepository {
         return collection;
     }
 
-    public List<Collection> findTenRandomCollectionByClubId(Long clubId) {
+    public List<Collection> findRandomCollectionByClubIdAndAmount(Long clubId, Integer amount) {
         return em.createQuery("SELECT collection FROM Collection collection WHERE collection.clubId =: clubId ORDER BY RAND()")
                 .setParameter("clubId", clubId)
-                .setMaxResults(10)
+                .setMaxResults(amount)
                 .getResultList();
     }
 
