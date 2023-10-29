@@ -2,6 +2,7 @@ package com.swm.ventybackend.privateClubDetail;
 
 
 
+import com.swm.ventybackend.club.ClubService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/privateClubDetail")
@@ -52,7 +54,10 @@ public class PrivateClubDetailController {
 
     @GetMapping("/findPrivateClubDetailByClubId")
     public PrivateClubDetail findPrivateClubDetailByClubId(@RequestParam Long clubId) {
-        return privateClubDetailService.findPrivateClubDetailByClubId(clubId);
+        Optional<PrivateClubDetail> pcd = privateClubDetailService.findPrivateClubDetailByClubId(clubId);
+        if (pcd.isPresent())
+            return pcd.get();
+        else throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "PrivateClubDetail이 존재하지 않습니다.");
     }
 
     @GetMapping("/findPrivateClubDetailsByUsersId")
@@ -72,11 +77,13 @@ public class PrivateClubDetailController {
 
     @PostMapping("/passwordTest")
     public Object passwordTest(@RequestParam Long clubId, String password) {
-        PrivateClubDetail privateClubDetail = privateClubDetailService.findPrivateClubDetailByClubId(clubId);
-        if (privateClubDetail.checkPassword(password, passwordEncoder))
-            return true;
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호가 일치하지 않습니다.");
-
+        Optional<PrivateClubDetail> pcd = privateClubDetailService.findPrivateClubDetailByClubId(clubId);
+        if (pcd.isPresent()) {
+            if (pcd.get().checkPassword(password, passwordEncoder))
+                return true;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호가 일치하지 않습니다.");
+        }
+        else throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "PrivateClubDetail이 존재하지 않습니다.");
     }
 }
 

@@ -20,13 +20,21 @@ public class ClubService {
         return club.getClubId();
     }
 
-    public void removeClub(Long id) { clubRepository.remove(id); }
+    public void removeClub(Long id) {
+        clubRepository.remove(id);
+    }
 
-    public Club findClubById(Long id) { return clubRepository.findById(id); }
+    public Club findClubById(Long id) {
+        return clubRepository.findById(id);
+    }
 
-    public Club findClubByName(String name) { return clubRepository.findByName(name); }
+    public Club findClubByName(String name) {
+        return clubRepository.findByName(name);
+    }
 
-    public List<Club> findAllClubs() { return clubRepository.findAllClubs(); }
+    public List<Club> findAllClubs() {
+        return clubRepository.findAllClubs();
+    }
 
     public Club setClubThumbnailByContentId(Long clubId, Long contentId) {
         String thumbnailUrl = contentRepository.findById(contentId).getThumbnailUrl();
@@ -35,6 +43,10 @@ public class ClubService {
 
     public void updateClubThumbnailImageUrlByClubId(Long clubId, String thumbnailImageUrl) {
         clubRepository.updateClubThumbnailImageUrlByClubId(clubId, thumbnailImageUrl);
+    }
+
+    public Long getCurrentClubUsersCountByClubId(Long clubId) {
+        return clubRepository.getCurrentClubUsersCountByClubId(clubId);
     }
 
 }

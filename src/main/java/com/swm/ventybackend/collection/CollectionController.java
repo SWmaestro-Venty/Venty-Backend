@@ -50,11 +50,11 @@ public class CollectionController {
     }
 
     @GetMapping("/findByIdOrName")
-    public String read(@RequestParam @Nullable Long id, @Nullable String name) {
+    public Collection read(@RequestParam @Nullable Long id, @Nullable String name) {
         if(id != null) {
-            return collectionService.findCollectionById(id).toString();
+            return collectionService.findCollectionById(id);
         } else {
-            return collectionService.findCollectionByName(name).toString();
+            return collectionService.findCollectionByName(name);
         }
     }
 
@@ -72,9 +72,9 @@ public class CollectionController {
         return collectionId + "번 컬렉션의 썸네일 변경 완료 : " + contentId + "번 콘텐츠의 썸네일";
     }
 
-    @GetMapping("/findTenRandomCollectionByClubId")
-    public List<Collection> findTenRandomCollectionByClubId(@RequestParam Long clubId) {
-        return collectionService.findTenRandomCollectionByClubId(clubId);
+    @GetMapping("/findRandomCollectionByClubIdAndAmount")
+    public List<Collection> findTenRandomCollectionByClubId(@RequestParam Long clubId, String amount) {
+        return collectionService.findRandomCollectionByClubIdAndAmount(clubId, Integer.parseInt(amount));
     }
 
     @GetMapping("/findCollectionsByUsersIdAndClubId")

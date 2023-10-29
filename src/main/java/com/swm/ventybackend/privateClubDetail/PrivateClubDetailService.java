@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,7 +30,7 @@ public class PrivateClubDetailService {
         return privateClubDetailRepository.findById(id);
     }
 
-    public PrivateClubDetail findPrivateClubDetailByClubId(Long clubId) {
+    public Optional<PrivateClubDetail> findPrivateClubDetailByClubId(Long clubId) {
         return privateClubDetailRepository.findPrivateClubDetailByClubId(clubId);
     }
 

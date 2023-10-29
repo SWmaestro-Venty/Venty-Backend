@@ -34,4 +34,8 @@ public class SubscribeMapService {
         return subscribeMapRepository.findSubscribeMapsByUsersId(usersId);
     }
 
+    public Boolean checkExistSubscribeMapByUsersIdAndCollectionId(Long usersId, Long collectionId) {
+        return subscribeMapRepository.checkExistSubscribeMapByUsersIdAndCollectionId(usersId, collectionId);
+    }
+
 }

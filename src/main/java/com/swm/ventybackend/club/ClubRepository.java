@@ -46,4 +46,10 @@ public class ClubRepository {
                 .executeUpdate();
         em.clear();
     }
+
+    public Long getCurrentClubUsersCountByClubId(Long clubId) {
+        return em.createQuery("SELECT COUNT(*) FROM Club club WHERE club.clubId =: clubId", Long.class)
+                .setParameter("clubId", clubId)
+                .getSingleResult();
+    }
 }

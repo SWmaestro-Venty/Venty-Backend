@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,10 +33,11 @@ public class PrivateClubDetailRepository {
                 .getResultList();
     }
 
-    public PrivateClubDetail findPrivateClubDetailByClubId(Long clubId) {
-        return em.createQuery("SELECT pcd FROM PrivateClubDetail pcd WHERE pcd.clubId =: clubId", PrivateClubDetail.class)
+    public Optional<PrivateClubDetail> findPrivateClubDetailByClubId(Long clubId) {
+        List<PrivateClubDetail> pcd = em.createQuery("SELECT pcd FROM PrivateClubDetail pcd WHERE pcd.clubId =: clubId", PrivateClubDetail.class)
                 .setParameter("clubId", clubId)
-                .getSingleResult();
+                .getResultList();
+        return pcd.stream().findAny();
     }
 
 //    public void updatePrivateClubPasswordByClubId(Long clubId, String password) {
@@ -57,6 +59,7 @@ public class PrivateClubDetailRepository {
                 .executeUpdate();
         em.flush();
     }
+
 }
 
 

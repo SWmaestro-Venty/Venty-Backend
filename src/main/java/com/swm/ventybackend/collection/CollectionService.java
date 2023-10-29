@@ -37,8 +37,8 @@ public class CollectionService {
         return collectionRepository.updateThumbnail(collectionId, thumbnailUrl);
     }
 
-    public List<Collection> findTenRandomCollectionByClubId(Long clubId) {
-        return collectionRepository.findTenRandomCollectionByClubId(clubId);
+    public List<Collection> findRandomCollectionByClubIdAndAmount(Long clubId, Integer amount) {
+        return collectionRepository.findRandomCollectionByClubIdAndAmount(clubId, amount);
     }
 
     public List<Collection> findCollectionsByUsersIdAndClubId(Long usersId, Long clubId) {

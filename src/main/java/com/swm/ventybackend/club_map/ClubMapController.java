@@ -1,8 +1,11 @@
 package com.swm.ventybackend.club_map;
 
 import com.swm.ventybackend.club.Club;
+import com.swm.ventybackend.club.ClubService;
 import com.swm.ventybackend.collection.Collection;
 import com.swm.ventybackend.collection.CollectionService;
+import com.swm.ventybackend.privateClubDetail.PrivateClubDetail;
+import com.swm.ventybackend.privateClubDetail.PrivateClubDetailService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/clubMap")
@@ -18,11 +22,21 @@ public class ClubMapController {
 
     private final ClubMapService clubMapService;
     private final CollectionService collectionService;
+    private final PrivateClubDetailService privateClubDetailService;
+    private final ClubService clubService;
 
     @PostMapping("/create")
     public String create(@RequestParam Long usersId, Long clubId) {
+
+        // 이미 가입된 클럽인 경우
         if (clubMapService.isUsersExistClubByUsersIdAndClubId(usersId, clubId)) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미 가입된 클럽");
+        }
+
+        // 프라이빗 클럽의 가입 정원을 초과한 경우
+        Optional<PrivateClubDetail> pcd = privateClubDetailService.findPrivateClubDetailByClubId(clubId);
+        if (pcd.isPresent() && (clubService.getCurrentClubUsersCountByClubId(clubId) >= pcd.get().getPrivateClubMaxUsers())) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "클럽 가입 정원을 초과하였습니다.");
         }
 
         ClubMap clubMap = new ClubMap();
