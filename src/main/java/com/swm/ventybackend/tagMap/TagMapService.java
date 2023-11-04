@@ -33,4 +33,8 @@ public class TagMapService {
     public List<TagMap> findTagMapsByContentId(Long contentId) {
         return tagMapRepository.findTagMapsByContentId(contentId);
     }
+
+    public List<Long> findContentIdsByTagNames(List<String> tagNames) {
+        return tagMapRepository.findContentIdsByTagNames(tagNames);
+    }
 }
