@@ -2,7 +2,6 @@ package com.swm.ventybackend.privateClubDetail;
 
 
 
-import com.swm.ventybackend.club.ClubService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class PrivateClubDetailController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/create")
-    public String create(@RequestParam @Nullable String password, Integer maxUsers, Long usersId, Long clubId, @Nullable String description) {
+    public String create(@RequestParam @Nullable String password, Integer maxUsers, Long usersId, Long clubId, String description) {
         PrivateClubDetail privateClubDetail = new PrivateClubDetail();
         privateClubDetail.setPrivateClubMaxUsers(maxUsers);
         privateClubDetail.setUsersId(usersId);
