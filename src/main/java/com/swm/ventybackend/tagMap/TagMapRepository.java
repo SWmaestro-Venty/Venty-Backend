@@ -1,6 +1,5 @@
 package com.swm.ventybackend.tagMap;
 
-import com.swm.ventybackend.content_rds.Content;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;

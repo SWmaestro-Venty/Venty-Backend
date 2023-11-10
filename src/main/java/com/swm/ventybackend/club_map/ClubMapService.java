@@ -1,6 +1,5 @@
 package com.swm.ventybackend.club_map;
 
-import com.swm.ventybackend.club.Club;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

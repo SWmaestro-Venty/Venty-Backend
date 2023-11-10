@@ -1,7 +1,6 @@
 package com.swm.ventybackend.tagMap;
 
 
-import com.swm.ventybackend.content_rds.Content;
 import com.swm.ventybackend.tag.TagService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
