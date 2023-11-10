@@ -1,8 +1,8 @@
 package com.swm.ventybackend.tagMap;
 
-import com.swm.ventybackend.content_rds.Content;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -44,4 +44,19 @@ public class TagMapRepository {
 //    public List<Content> findContentByManyTagName(List<String> tagNameList) {
 //
 //    }
+
+    public List<Long> findContentIdsByTagNames(List<String> tagNames) {
+        long tagCount = tagNames.size();
+
+        String jpql = "SELECT tm.contentId FROM TagMap tm WHERE tm.tagId IN " +
+                "(SELECT t.tagId FROM Tag t WHERE t.name IN :tagNames) " +
+                "GROUP BY tm.contentId " +
+                "HAVING COUNT(tm.contentId) = :tagCount";
+
+        TypedQuery<Long> query = em.createQuery(jpql, Long.class);
+        query.setParameter("tagNames", tagNames);
+        query.setParameter("tagCount", tagCount);
+
+        return query.getResultList();
+    }
 }

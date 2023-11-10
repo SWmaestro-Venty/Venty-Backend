@@ -1,12 +1,10 @@
 package com.swm.ventybackend.club_map;
 
-import com.swm.ventybackend.club.Club;
 import com.swm.ventybackend.club.ClubService;
 import com.swm.ventybackend.collection.Collection;
 import com.swm.ventybackend.collection.CollectionService;
 import com.swm.ventybackend.privateClubDetail.PrivateClubDetail;
 import com.swm.ventybackend.privateClubDetail.PrivateClubDetailService;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

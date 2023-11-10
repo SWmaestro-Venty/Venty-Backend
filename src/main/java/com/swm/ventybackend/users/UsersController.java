@@ -346,7 +346,7 @@ public class UsersController {
 
     @Operation(summary = "[1 - 3] 유저/컨트리뷰터 프로필 이미지 변경", description = "본인 혹은 어드민에 의한 프로필 이미지 변경")
     @PostMapping("/updateUsersProfileImageByUsersId")
-    public BaseResponse<String> updateUsersProfileImageByUsersId(@RequestParam Long usersId, @Nullable MultipartFile file, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
+    public BaseResponse<String> updateUsersProfileImageByUsersId(@RequestParam Long usersId, MultipartFile file, @RequestHeader(value = "X-ACCESS-TOKEN") String accessToken) throws BaseException {
         try {
             JwtSuccessDTO jwtSuccessDTO = jwtService.getToken(accessToken);
 

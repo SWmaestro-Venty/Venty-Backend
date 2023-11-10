@@ -1,7 +1,6 @@
 package com.swm.ventybackend.tagMap;
 
 
-import com.swm.ventybackend.content_rds.Content;
 import com.swm.ventybackend.tag.TagService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +56,11 @@ public class TagMapController {
     @GetMapping("/findTagMapsByContentId")
     public List<TagMap> findTagMapsByContentId(@RequestParam Long contentId) {
         return tagMapService.findTagMapsByContentId(contentId);
+    }
+
+    @GetMapping("/findContentIdsByTagNames")
+    public List<Long> findContentIdsByTagNames(@RequestParam List<String> tagNames) {
+        return tagMapService.findContentIdsByTagNames(tagNames);
     }
 
 //    @GetMapping("/findContentByManyTagId")

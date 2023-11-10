@@ -1,12 +1,9 @@
 package com.swm.ventybackend.club_map;
 
 
-import com.swm.ventybackend.club.Club;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
