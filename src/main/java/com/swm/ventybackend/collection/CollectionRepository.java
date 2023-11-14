@@ -58,4 +58,11 @@ public class CollectionRepository {
                 .setParameter("clubId", clubId)
                 .getResultList();
     }
+
+    public Collection addOneCollectionLikeByCollectionId(Long collectionId) {
+        Collection collection = em.find(Collection.class, collectionId);
+        collection.setLikes(collection.getLikes() + 1);
+        return collection;
+    }
+
 }
