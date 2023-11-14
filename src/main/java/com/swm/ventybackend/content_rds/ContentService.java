@@ -156,4 +156,8 @@ public class ContentService {
     public Content addOneContentLikeByContentId(Long contentId) {
         return contentRepository.addOneContentLikeByContentId(contentId);
     }
+
+    public Content minusOneContentLikeByContentId(Long contentId) {
+        return contentRepository.minusOneContentLikeByContentId(contentId);
+    }
 }

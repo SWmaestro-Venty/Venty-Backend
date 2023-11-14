@@ -86,4 +86,9 @@ public class CollectionController {
     public Collection addOneCollectionLikeByCollectionId(@RequestParam Long collectionId) {
         return collectionService.addOneCollectionLikeByCollectionId(collectionId);
     }
+
+    @GetMapping("/minusOneCollectionLikeByCollectionId")
+    public Collection minusOneCollectionLikeByCollectionId(@RequestParam Long collectionId) {
+        return collectionService.minusOneCollectionLikeByCollectionId(collectionId);
+    }
 }

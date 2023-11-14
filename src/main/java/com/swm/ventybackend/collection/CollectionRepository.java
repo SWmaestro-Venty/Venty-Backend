@@ -65,4 +65,10 @@ public class CollectionRepository {
         return collection;
     }
 
+    public Collection minusOneCollectionLikeByCollectionId(Long collectionId) {
+        Collection collection = em.find(Collection.class, collectionId);
+        collection.setLikes(collection.getLikes() - 1);
+        return collection;
+    }
+
 }

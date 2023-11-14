@@ -48,4 +48,8 @@ public class CollectionService {
     public Collection addOneCollectionLikeByCollectionId(Long collectionId) {
         return collectionRepository.addOneCollectionLikeByCollectionId(collectionId);
     }
+
+    public Collection minusOneCollectionLikeByCollectionId(Long collectionId) {
+        return collectionRepository.minusOneCollectionLikeByCollectionId(collectionId);
+    }
 }
