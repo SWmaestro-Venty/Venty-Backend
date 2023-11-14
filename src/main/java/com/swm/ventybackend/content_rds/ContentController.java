@@ -73,6 +73,11 @@ public class ContentController {
         return contentService.getDownloadCountByContentId(contentId);
     }
 
+    @GetMapping("/addOneContentLikeByContentId")
+    public Content addOneContentLikeByContentId(@RequestParam Long contentId) {
+        return contentService.addOneContentLikeByContentId(contentId);
+    }
+
     // @TODO : 다운로드 기능을 추가 할 건지? , 일단 카운트만 구현
 
 }

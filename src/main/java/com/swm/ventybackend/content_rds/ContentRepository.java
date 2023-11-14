@@ -44,5 +44,11 @@ public class ContentRepository {
                 .getSingleResult();
     }
 
+    public Content addOneContentLikeByContentId(Long contentId) {
+        Content content = em.find(Content.class, contentId);
+        content.setLikes(content.getLikes() + 1);
+        return content;
+    }
+
 
 }
