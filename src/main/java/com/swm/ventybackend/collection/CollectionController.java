@@ -81,4 +81,14 @@ public class CollectionController {
     public List<Collection> findCollectionsByUsersIdAndClubId(@RequestParam Long usersId, Long clubId) {
         return collectionService.findCollectionsByUsersIdAndClubId(usersId, clubId);
     }
+
+    @GetMapping("/addOneCollectionLikeByCollectionId")
+    public Collection addOneCollectionLikeByCollectionId(@RequestParam Long collectionId) {
+        return collectionService.addOneCollectionLikeByCollectionId(collectionId);
+    }
+
+    @GetMapping("/minusOneCollectionLikeByCollectionId")
+    public Collection minusOneCollectionLikeByCollectionId(@RequestParam Long collectionId) {
+        return collectionService.minusOneCollectionLikeByCollectionId(collectionId);
+    }
 }

@@ -152,4 +152,12 @@ public class ContentService {
     public Integer getDownloadCountByContentId(Long contentId) {
         return contentRepository.getDownloadCountByContentId(contentId);
     }
+
+    public Content addOneContentLikeByContentId(Long contentId) {
+        return contentRepository.addOneContentLikeByContentId(contentId);
+    }
+
+    public Content minusOneContentLikeByContentId(Long contentId) {
+        return contentRepository.minusOneContentLikeByContentId(contentId);
+    }
 }

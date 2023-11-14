@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import java.sql.Timestamp;
 
@@ -50,5 +47,8 @@ public class Content {
 
     @Column(name = "download_count")
     private Integer downloadCount;
+
+    @Column(name = "likes")
+    private Integer likes;
 
 }

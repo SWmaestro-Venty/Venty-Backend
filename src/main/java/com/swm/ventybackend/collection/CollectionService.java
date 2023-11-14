@@ -44,4 +44,12 @@ public class CollectionService {
     public List<Collection> findCollectionsByUsersIdAndClubId(Long usersId, Long clubId) {
         return collectionRepository.findCollectionsByUsersIdAndClubId(usersId, clubId);
     }
+
+    public Collection addOneCollectionLikeByCollectionId(Long collectionId) {
+        return collectionRepository.addOneCollectionLikeByCollectionId(collectionId);
+    }
+
+    public Collection minusOneCollectionLikeByCollectionId(Long collectionId) {
+        return collectionRepository.minusOneCollectionLikeByCollectionId(collectionId);
+    }
 }

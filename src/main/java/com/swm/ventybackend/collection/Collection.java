@@ -45,4 +45,7 @@ public class Collection {
 
     @Column(name = "collection_description")
     private String collectionDescription;
+
+    @Column(name = "likes")
+    private Integer likes;
 }
