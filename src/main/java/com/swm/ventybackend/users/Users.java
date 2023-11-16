@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 @Data
@@ -52,7 +53,7 @@ public class Users {
     private String oAuthType;
 
     @Column(name = "oauth_id")
-    private Long oAuthId;
+    private String oAuthId;
 
     @Column(name = "age_range")
     private String ageRange;

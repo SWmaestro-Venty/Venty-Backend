@@ -51,7 +51,7 @@ public class UsersRepository {
 //        return users;
 //    }
 
-    public Optional<Users> findUsersByOAuthIdAndType(Long oAuthId, String oAuthType) {
+    public Optional<Users> findUsersByOAuthIdAndType(String oAuthId, String oAuthType) {
         List<Users> users = em.createQuery("SELECT users FROM Users users WHERE users.oAuthId = :oAuthId AND users.oAuthType = :oAuthType", Users.class)
                 .setParameter("oAuthId", oAuthId)
                 .setParameter("oAuthType", oAuthType)

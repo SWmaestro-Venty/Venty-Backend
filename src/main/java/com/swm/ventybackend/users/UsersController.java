@@ -75,11 +75,11 @@ public class UsersController {
     @Operation(summary = "[0] 카카오 (신규/기존) 유저 로그인")
     @PostMapping("/loginKakaoUser")
     public LoginUsersDTO loginKakaoUser(@RequestParam String kakaoId, @Nullable String email, @Nullable String gender, @Nullable String ageRange) {
-        Optional<Users> users = usersService.findUsersByOAuthIdAndType(Long.valueOf(kakaoId), "kakao");
+        Optional<Users> users = usersService.findUsersByOAuthIdAndType(kakaoId, "kakao");
 
         if (users.isEmpty()) {
             Users newUsers = new Users();
-            newUsers.setOAuthId(Long.valueOf(kakaoId));
+            newUsers.setOAuthId(kakaoId);
             newUsers.setOAuthType("kakao");
 
             if (ageRange != null)
@@ -123,11 +123,11 @@ public class UsersController {
     @Operation(summary = "[0] 구글 (신규/기존) 유저 로그인")
     @PostMapping("/loginGoogleUser")
     public LoginUsersDTO loginGoogleUser(@RequestParam String googleId, @Nullable String email, @Nullable String name) {
-        Optional<Users> users = usersService.findUsersByOAuthIdAndType(Long.valueOf(googleId), "google");
+        Optional<Users> users = usersService.findUsersByOAuthIdAndType(googleId, "google");
 
         if (users.isEmpty()) {
             Users newUsers = new Users();
-            newUsers.setOAuthId(Long.valueOf(googleId));
+            newUsers.setOAuthId(googleId);
             newUsers.setOAuthType("google");
 
             if (name != null)
@@ -168,11 +168,11 @@ public class UsersController {
     @Operation(summary = "[0] 애플 (신규/기존) 유저 로그인")
     @PostMapping("/loginAppleUser")
     public LoginUsersDTO loginAppleUser(@RequestParam String appleId, @Nullable String email, @Nullable String name, @Nullable String authCode, @Nullable String token) {
-        Optional<Users> users = usersService.findUsersByOAuthIdAndType(Long.valueOf(appleId), "apple");
+        Optional<Users> users = usersService.findUsersByOAuthIdAndType(appleId, "apple");
 
         if (users.isEmpty()) {
             Users newUsers = new Users();
-            newUsers.setOAuthId(Long.valueOf(appleId));
+            newUsers.setOAuthId(appleId);
             newUsers.setOAuthType("apple");
 
             if (email != null)
