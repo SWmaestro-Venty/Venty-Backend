@@ -36,7 +36,7 @@ public class UsersService {
 
     public Optional<Users> findUsersByEmail(String email) { return usersRepository.findByEmail(email); }
 
-    public Optional<Users> findUsersByOAuthIdAndType(Long oAuthId, String oAuthType) {
+    public Optional<Users> findUsersByOAuthIdAndType(String oAuthId, String oAuthType) {
         return usersRepository.findUsersByOAuthIdAndType(oAuthId, oAuthType);
     }
 
